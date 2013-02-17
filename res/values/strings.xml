@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BWT for Teachers</string>
+    
+    <string name="welcome_prompt">Welcome to BWT for Teachers! Swipe down to continue.</string>
+	<string name="password_prompt">Please enter your password.</string>
+	<string name="home_prompt">Please select a menu option.</string>
+	<string name="language_prompt">Please select a language.</string>
+	<string name="category_prompt">Please select a category.</string>
+	<string name="record_prompt">Please select a xxx to record.</string>
+	
+	<string name="period">.</string>
+	<string name="dot">Dot</string>
+	
+	<string name="record_sounds">Record Sounds</string>
+	<string name="settings">Settings</string>
+	
+	<string name="english">English</string>
+	<string name="kannada">Kannada</string>
+	<string name="hindi">Hindi</string>
+	
+	<string name="numbers">Numbers</string>
+	<string name="letters">Letters</string>
+	<string name="phrases">Phrases</string>
+	
+	<string name="one">one</string>
+	<string name="two">two</string>
+	<string name="three">three</string>
+	<string name="four">four</string>
+	<string name="five">five</string>
+	<string name="six">six</string>
+	
+	<string name="a">a</string>
+	<string name="b">b</string>
+	<string name="c">c</string>
+	<string name="d">d</string>
+	<string name="e">e</string>
+	<string name="f">f</string>
+	<string name="g">g</string>
+	<string name="h">h</string>
+	<string name="i">i</string>
+	<string name="j">j</string>
+	<string name="k">k</string>
+	<string name="l">l</string>
+	<string name="m">m</string>
+	<string name="n">n</string>
+	<string name="o">o</string>
+	<string name="p">p</string>
+	<string name="q">q</string>
+	<string name="r">r</string>
+	<string name="s">s</string>
+	<string name="t">t</string>
+	<string name="u">u</string>
+	<string name="v">v</string>
+	<string name="w">w</string>
+	<string name="x">x</string>
+	<string name="y">y</string>
+	<string name="z">z</string>
+	
+	<string name="dot_practice">dot practice</string>
+	<string name="find_dot">find dot</string>
+	<string name="free_play">free play</string>
+	<string name="free_spelling">free spelling</string>
+	<string name="good">good</string>
+	<string name="learn_dots">learn dots</string>
+	<string name="learn_letters">learn letters</string>
+	<string name="letter_practice">letter practice</string>
+	<string name="no">no</string>
+	<string name="now_press">now press</string>
+	<string name="please_press">please press</string>
+	<string name="please_write">please write</string>
+	<string name="press">press</string>
+	<string name="to_write_the_letter">to write the letter</string>
+	<string name="try_again">try again</string>
+	
+</resources>
