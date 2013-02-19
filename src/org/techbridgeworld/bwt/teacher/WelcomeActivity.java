@@ -63,6 +63,7 @@ public class WelcomeActivity extends Activity implements TextToSpeech.OnInitList
 			}
 		});
 		
+		// If this is the first run of the teacher app, save the audio files on internal storage
 		SharedPreferences prefs = getSharedPreferences("BWT", 0);
 		if(prefs.getBoolean("firstRunWelcome", true)) {
 			welcomePrompt = getResources().getString(R.string.welcome_prompt_first);
@@ -124,6 +125,7 @@ public class WelcomeActivity extends Activity implements TextToSpeech.OnInitList
         super.onDestroy();
     }
     
+    // If the user presses back, go to the home screen
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -163,23 +165,23 @@ public class WelcomeActivity extends Activity implements TextToSpeech.OnInitList
 
 		@Override
 		public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
-			// Swipe up
+			// If the user swipes up instead of down, they should rotate the phone 180 degrees
 			if (event1.getY() - event2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
 				speakOut(rotate180);
 			}
 
-			// Swipe down
+			// If the user swipes down, go to the password activity
 			else if (event2.getY() - event1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
 				Intent intent = new Intent(WelcomeActivity.this, PasswordActivity.class);
 				startActivity(intent);
 			}
 
-			// Swipe left
+			// If the user swipes left, they should rotate the phone 90 degrees to the right
 			else if (event1.getX() - event2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
 				speakOut(rotate90Right);
 			}
 
-			// Swipe right
+			// If the user swipes right, they should rotate the phone 90 degrees to the left 
 			else {
 				speakOut(rotate90Left);
 			}

@@ -111,13 +111,13 @@ public class LanguageActivity extends Activity implements TextToSpeech.OnInitLis
 
 		@Override
 		public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
-			// Swipe up
+			// If the user swipes up, go the Home Activity
 			if (event1.getY() - event2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
 				Intent intent = new Intent(LanguageActivity.this, HomeActivity.class);
 				startActivity(intent);
 			}
 
-			// Swipe down
+			// If the user swipes down, go to the Category Activity
 			else if (event2.getY() - event1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
 				switch(currentOption) {
 					case 0:
@@ -137,7 +137,7 @@ public class LanguageActivity extends Activity implements TextToSpeech.OnInitLis
 				}
 			}
 			
-			// Swipe left
+			// If the user swipes left, go to the option on the left
 			else if (event1.getX() - event2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
 				languageHelp = languageHelp.replace(options[currentOption].toUpperCase(Locale.getDefault()), "xxx");
 				currentOption = (currentOption - 1) % numOptions; 
@@ -147,7 +147,7 @@ public class LanguageActivity extends Activity implements TextToSpeech.OnInitLis
 				teacherLanguage.setContentDescription(options[currentOption]);
 			}
 			
-			// Swipe right
+			// If the user swipes right, go to the option on the right
 			else {
 				languageHelp = languageHelp.replace(options[currentOption].toUpperCase(Locale.getDefault()), "xxx");
 				currentOption = (currentOption + 1) % numOptions; 

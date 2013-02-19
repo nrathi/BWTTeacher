@@ -84,6 +84,7 @@ public class HomeActivity extends Activity implements TextToSpeech.OnInitListene
         super.onDestroy();
     }
 	
+    // If the user presses back, go to the Welcome Activity
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -121,13 +122,13 @@ public class HomeActivity extends Activity implements TextToSpeech.OnInitListene
 
 		@Override
 		public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
-			// Swipe up
+			// If the user swipes up, go the Welcome Activity
 			if (event1.getY() - event2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
 				Intent intent = new Intent(HomeActivity.this, WelcomeActivity.class);
 				startActivity(intent);
 			}
 
-			// Swipe down
+			// If the user swipes down, go to the Language Activity
 			else if (event2.getY() - event1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
 				switch(currentOption) {
 					case 0: 
@@ -143,7 +144,7 @@ public class HomeActivity extends Activity implements TextToSpeech.OnInitListene
 				}
 			}
 			
-			// Swipe left
+			// If the user swipes left, go to the option on the left
 			else if (event1.getX() - event2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
 				homeHelp = homeHelp.replace(options[currentOption].toUpperCase(Locale.getDefault()), "xxx");
 				currentOption = (currentOption - 1) % numOptions; 
@@ -153,7 +154,7 @@ public class HomeActivity extends Activity implements TextToSpeech.OnInitListene
 				teacherHome.setContentDescription(options[currentOption]);
 			}
 			
-			// Swipe right
+			// If the user swipes right, go to the option on the right
 			else {
 				homeHelp = homeHelp.replace(options[currentOption].toUpperCase(Locale.getDefault()), "xxx");
 				currentOption = (currentOption + 1) % numOptions; 
