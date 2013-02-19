@@ -5,6 +5,9 @@ import java.util.Locale;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -16,11 +19,15 @@ import android.widget.Button;
 
 public class PasswordActivity extends Activity implements TextToSpeech.OnInitListener {
  
+	private SensorManager manager;
+	private ShakeEventListener listener;
+	
 	private TextToSpeech tts;
 	private Vibrator vibrator;
 	
 	private Button one, two, three, four;
-	private String password_prompt; 
+	private String passwordPrompt; 
+	private String passwordHelp; 
 	private String actualPassword = "1123";
 	private String enteredPassword = ""; 
 
@@ -61,10 +68,27 @@ public class PasswordActivity extends Activity implements TextToSpeech.OnInitLis
 			}	
 		});
 		
-		password_prompt = getResources().getString(R.string.password_prompt);
+		passwordPrompt = getResources().getString(R.string.password_prompt);
+		passwordHelp = getResources().getString(R.string.password_help);
 
 		tts = new TextToSpeech(this, this);
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		
+		manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		listener = new ShakeEventListener();   
+		listener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
+			public void onShake() {
+				speakOut(passwordHelp);
+			}
+		});
+		
+		SharedPreferences prefs = getSharedPreferences("BWT", 0);
+		if(prefs.getBoolean("firstRunPassword", true)) {
+			passwordPrompt = getResources().getString(R.string.password_prompt_first);
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putBoolean("firstRunPassword", false);
+			editor.commit();
+		}
 		
 		final Handler handler = new Handler();
 		final Runnable runnable = new Runnable()
@@ -79,7 +103,7 @@ public class PasswordActivity extends Activity implements TextToSpeech.OnInitLis
 		        }
 		        else if(enteredPassword.length() >= 4) {
 		        	speakOut("Incorrect.");
-		        	int dot = 200;
+		        	int dot = 500;
 		        	long[] pattern = {0, dot, dot, dot}; 
 		        	vibrator.vibrate(pattern, -1);
 		        	enteredPassword = ""; 
@@ -92,7 +116,30 @@ public class PasswordActivity extends Activity implements TextToSpeech.OnInitLis
 
 		handler.postDelayed(runnable, 500);
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		manager.registerListener(listener,
+				manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+				SensorManager.SENSOR_DELAY_UI);
+	}
 
+	@Override
+	protected void onPause() {
+		manager.unregisterListener(listener);
+		super.onPause();
+	}
+	
+    @Override
+    public void onDestroy() {
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+        super.onDestroy();
+    }
+	
 	@Override
 	public void onInit(int status) {
 		if (status == TextToSpeech.SUCCESS) {
@@ -100,7 +147,7 @@ public class PasswordActivity extends Activity implements TextToSpeech.OnInitLis
 			if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
 				Log.e("TTS", "This language is not supported");
 			else
-				speakOut(password_prompt);
+				speakOut(passwordPrompt);
 		}
 		else
 			Log.e("TTS", "Initilization Failed!");

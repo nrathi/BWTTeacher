@@ -3,12 +3,31 @@
 
     <string name="app_name">BWT for Teachers</string>
     
-    <string name="welcome_prompt">Welcome to BWT for Teachers! Swipe down to continue.</string>
+    <string name="welcome_prompt_first">Welcome! This app lets you change the language and recordings associated with your BWT. Swipe down to select. Swipe up to go back. Swipe left or right to change options. Shake the phone at any time for help.</string>
+    <string name="password_prompt_first">This screen has four quadrants. Top left is one, top right is two, bottom left is three, and bottom right is four. Please enter your password. </string>
+    <string name="record_prompt_first">Tap and hold to begin recording xxx. Release when you are done. Swipe down to save your recording or swipe up to cancel. Swipe right to record the next item.</string>
+    
+    <string name="welcome_prompt">Welcome!</string>
 	<string name="password_prompt">Please enter your password.</string>
 	<string name="home_prompt">Please select a menu option.</string>
 	<string name="language_prompt">Please select a language.</string>
 	<string name="category_prompt">Please select a category.</string>
-	<string name="record_prompt">Please select a xxx to record.</string>
+	<string name="playback_prompt">Please select a xxx to record.</string>
+	<string name="record_prompt">Please tap and hold to record xxx.</string>
+	
+	<string name="welcome_help">This app lets you change the language and recordings associated with your BWT. Swipe down to select. Swipe up to go back. Swipe left or right to change options.</string>
+	<string name="password_help">This screen has four quadrants. Top left is one, top right is two, bottom left is three, and bottom right is four. If you forgot your password, please contact a Tech Bridge World assistant.</string>
+	<string name="home_help">Your menu options are Record Sounds and Settings. Your current selection is xxx. Swipe down to select.</string>
+	<string name="language_help">Your language options are English, Kannada, and Hindi. Your current selection is xxx. Swipe down to select.</string>
+	<string name="category_help">Your category options are Numbers, Letters, and Phrases. Your current selection is xxx in the language yyy. Swipe down to select.</string>
+	<string name="playback_help">Your recording options are zzz in the language yyy. Your current selection is xxx. Tap to hear the current recording or swipe down to select.</string>
+	<string name="record_help">Tap and hold to begin recording xxx. Release when you are done. Swipe down to save your recording or swipe up to cancel. Swipe right to record the next item.</string>
+	
+	<string name="start">Start</string>
+	
+	<string name="rotate_180">Please rotate the phone 180 degrees.</string>
+    <string name="rotate_90_right">Please rotate the phone 90 degrees to the right.</string>
+    <string name="rotate_90_left">Please rotate the phone 90 degrees to the left.</string>
 	
 	<string name="period">.</string>
 	<string name="dot">Dot</string>

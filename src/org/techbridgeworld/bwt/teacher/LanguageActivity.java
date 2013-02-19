@@ -3,7 +3,10 @@ package org.techbridgeworld.bwt.teacher;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.view.GestureDetectorCompat;
@@ -20,8 +23,12 @@ public class LanguageActivity extends Activity implements TextToSpeech.OnInitLis
 	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 	private GestureDetectorCompat detector; 
 	
-	private String language_prompt;
-	private TextView teacher_language; 
+	private SensorManager manager;
+	private ShakeEventListener listener;
+	
+	private String languagePrompt;
+	private String languageHelp;
+	private TextView teacherLanguage; 
 	
 	private String[] options;
 	private int numOptions = 3; 
@@ -37,12 +44,45 @@ public class LanguageActivity extends Activity implements TextToSpeech.OnInitLis
 		options[1] = getResources().getString(R.string.kannada);
 		options[2] = getResources().getString(R.string.hindi);
 		
-		language_prompt = getResources().getString(R.string.language_prompt);
-		teacher_language = (TextView) findViewById(R.id.teacher_language);
+		languagePrompt = getResources().getString(R.string.language_prompt);
+		languageHelp = getResources().getString(R.string.language_help);
+		teacherLanguage = (TextView) findViewById(R.id.teacher_language);
 		
 		tts = new TextToSpeech(this, this);
 		detector = new GestureDetectorCompat(this, new MyGestureListener());
+		
+		manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		listener = new ShakeEventListener();   
+		listener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
+			public void onShake() {
+				languageHelp = languageHelp.replace("xxx", options[currentOption].toUpperCase(Locale.getDefault()));
+				speakOut(languageHelp);
+			}
+		});
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		manager.registerListener(listener,
+				manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+				SensorManager.SENSOR_DELAY_UI);
+	}
+
+	@Override
+	protected void onPause() {
+		manager.unregisterListener(listener);
+		super.onPause();
+	}
+	
+    @Override
+    public void onDestroy() {
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+        super.onDestroy();
+    }
 	
 	@Override 
 	public boolean onTouchEvent(MotionEvent event){ 
@@ -57,7 +97,7 @@ public class LanguageActivity extends Activity implements TextToSpeech.OnInitLis
 			if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
 				Log.e("TTS", "This language is not supported");
 			else
-				speakOut(language_prompt);
+				speakOut(languagePrompt);
 		}
 		else
 			Log.e("TTS", "Initilization Failed!");
@@ -82,6 +122,7 @@ public class LanguageActivity extends Activity implements TextToSpeech.OnInitLis
 				switch(currentOption) {
 					case 0:
 						Intent intent = new Intent(LanguageActivity.this, CategoryActivity.class);
+						intent.putExtra("language", options[currentOption]);
 						startActivity(intent);
 						break;
 					case 1:
@@ -98,18 +139,20 @@ public class LanguageActivity extends Activity implements TextToSpeech.OnInitLis
 			
 			// Swipe left
 			else if (event1.getX() - event2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+				languageHelp = languageHelp.replace(options[currentOption].toUpperCase(Locale.getDefault()), "xxx");
 				currentOption = (currentOption - 1) % numOptions; 
 				if(currentOption == -1) 
 					currentOption += numOptions;
-				teacher_language.setText(options[currentOption]);
-				teacher_language.setContentDescription(options[currentOption]);
+				teacherLanguage.setText(options[currentOption]);
+				teacherLanguage.setContentDescription(options[currentOption]);
 			}
 			
 			// Swipe right
 			else {
+				languageHelp = languageHelp.replace(options[currentOption].toUpperCase(Locale.getDefault()), "xxx");
 				currentOption = (currentOption + 1) % numOptions; 
-				teacher_language.setText(options[currentOption]);
-				teacher_language.setContentDescription(options[currentOption]);
+				teacherLanguage.setText(options[currentOption]);
+				teacherLanguage.setContentDescription(options[currentOption]);
 			}
 
 			return true;

@@ -3,7 +3,10 @@ package org.techbridgeworld.bwt.teacher;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.view.GestureDetectorCompat;
@@ -20,8 +23,14 @@ public class CategoryActivity extends Activity implements TextToSpeech.OnInitLis
 	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 	private GestureDetectorCompat detector; 
 	
-	private String category_prompt;
-	private TextView teacher_category;
+	private SensorManager manager;
+	private ShakeEventListener listener;
+	
+	private String categoryPrompt;
+	private String categoryHelp;
+	private TextView teacherCategory;
+	
+	private String language;
 	
 	private String[] options;
 	private int numOptions = 3; 
@@ -31,18 +40,55 @@ public class CategoryActivity extends Activity implements TextToSpeech.OnInitLis
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.teacher_category);
+
+		Bundle extras = getIntent().getExtras();
+		language = (String) extras.get("language");
 		
 		options = new String[numOptions]; 
 		options[0] = getResources().getString(R.string.numbers);
 		options[1] = getResources().getString(R.string.letters);
 		options[2] = getResources().getString(R.string.phrases);
 		
-		category_prompt = getResources().getString(R.string.category_prompt);
-		teacher_category = (TextView) findViewById(R.id.teacher_category);
+		categoryPrompt = getResources().getString(R.string.category_prompt);
+		categoryHelp = getResources().getString(R.string.category_help);
+		categoryHelp = categoryHelp.replace("yyy", language); 
+		teacherCategory = (TextView) findViewById(R.id.teacher_category);
 		
 		tts = new TextToSpeech(this, this);
 		detector = new GestureDetectorCompat(this, new MyGestureListener());
+		
+		manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		listener = new ShakeEventListener();   
+		listener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
+			public void onShake() {
+				categoryHelp = categoryHelp.replace("xxx", options[currentOption].toUpperCase(Locale.getDefault()));
+				speakOut(categoryHelp);
+			}
+		});
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		manager.registerListener(listener,
+				manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+				SensorManager.SENSOR_DELAY_UI);
+	}
+
+	@Override
+	protected void onPause() {
+		manager.unregisterListener(listener);
+		super.onPause();
+	}
+	
+    @Override
+    public void onDestroy() {
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+        super.onDestroy();
+    }
 	
 	@Override 
 	public boolean onTouchEvent(MotionEvent event){ 
@@ -57,7 +103,7 @@ public class CategoryActivity extends Activity implements TextToSpeech.OnInitLis
 			if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
 				Log.e("TTS", "This language is not supported");
 			else
-				speakOut(category_prompt);
+				speakOut(categoryPrompt);
 		}
 		else
 			Log.e("TTS", "Initilization Failed!");
@@ -79,39 +125,29 @@ public class CategoryActivity extends Activity implements TextToSpeech.OnInitLis
 
 			// Swipe down
 			else if (event2.getY() - event1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-				switch(currentOption) {
-					case 0: 
-						Intent intent = new Intent(CategoryActivity.this, RecordActivity.class);
-						intent.putExtra("category", currentOption);
-						startActivity(intent);
-						break;
-					case 1:
-						//Intent intent = new Intent(CategoryActivity.this, PasswordActivity.class);
-						//startActivity(intent);
-						break;
-					case 2: 
-						//Intent intent = new Intent(CategoryActivity.this, LanguageActivity.class);
-						//startActivity(intent);
-						break;
-					default:
-						break;
-				}
+				Intent intent = new Intent(CategoryActivity.this, PlaybackActivity.class);
+				intent.putExtra("language", language); 
+				intent.putExtra("category", currentOption);
+				intent.putExtra("currentOption", 0); 
+				startActivity(intent);
 			}
 			
 			// Swipe left
 			else if (event1.getX() - event2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+				categoryHelp = categoryHelp.replace(options[currentOption].toUpperCase(Locale.getDefault()), "xxx");
 				currentOption = (currentOption - 1) % numOptions; 
 				if(currentOption == -1) 
 					currentOption += numOptions;
-				teacher_category.setText(options[currentOption]);
-				teacher_category.setContentDescription(options[currentOption]);
+				teacherCategory.setText(options[currentOption]);
+				teacherCategory.setContentDescription(options[currentOption]);
 			}
 			
 			// Swipe right
 			else {
+				categoryHelp = categoryHelp.replace(options[currentOption].toUpperCase(Locale.getDefault()), "xxx");
 				currentOption = (currentOption + 1) % numOptions;
-				teacher_category.setText(options[currentOption]);
-				teacher_category.setContentDescription(options[currentOption]);
+				teacherCategory.setText(options[currentOption]);
+				teacherCategory.setContentDescription(options[currentOption]);
 			}
 
 			return true;

@@ -3,12 +3,16 @@ package org.techbridgeworld.bwt.teacher;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
@@ -20,8 +24,12 @@ public class HomeActivity extends Activity implements TextToSpeech.OnInitListene
 	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 	private GestureDetectorCompat detector; 
 	
-	private String home_prompt;
-	private TextView teacher_home;
+	private SensorManager manager;
+	private ShakeEventListener listener;
+	
+	private String homePrompt;
+	private String homeHelp;
+	private TextView teacherHome;
 	
 	private String[] options;
 	private int numOptions = 2;
@@ -36,11 +44,54 @@ public class HomeActivity extends Activity implements TextToSpeech.OnInitListene
 		options[0] = getResources().getString(R.string.record_sounds);
 		options[1] = getResources().getString(R.string.settings); 
 		
-		home_prompt = getResources().getString(R.string.home_prompt);
-		teacher_home = (TextView) findViewById(R.id.teacher_home);
+		homePrompt = getResources().getString(R.string.home_prompt);
+		homeHelp = getResources().getString(R.string.home_help);
+		teacherHome = (TextView) findViewById(R.id.teacher_home);
 		
 		tts = new TextToSpeech(this, this);
 		detector = new GestureDetectorCompat(this, new MyGestureListener());
+		
+		manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		listener = new ShakeEventListener();   
+		listener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
+			public void onShake() {
+				homeHelp = homeHelp.replace("xxx", options[currentOption].toUpperCase(Locale.getDefault()));
+				speakOut(homeHelp);
+			}
+		});
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		manager.registerListener(listener,
+				manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+				SensorManager.SENSOR_DELAY_UI);
+	}
+
+	@Override
+	protected void onPause() {
+		manager.unregisterListener(listener);
+		super.onPause();
+	}
+	
+    @Override
+    public void onDestroy() {
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+        super.onDestroy();
+    }
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+			Intent intent = new Intent(HomeActivity.this, WelcomeActivity.class);
+			startActivity(intent);
+	        return true;
+	    }
+	    return super.onKeyDown(keyCode, event);
 	}
 	
 	@Override 
@@ -56,7 +107,7 @@ public class HomeActivity extends Activity implements TextToSpeech.OnInitListene
 			if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
 				Log.e("TTS", "This language is not supported");
 			else
-				speakOut(home_prompt);
+				speakOut(homePrompt);
 		}
 		else
 			Log.e("TTS", "Initilization Failed!");
@@ -94,18 +145,20 @@ public class HomeActivity extends Activity implements TextToSpeech.OnInitListene
 			
 			// Swipe left
 			else if (event1.getX() - event2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+				homeHelp = homeHelp.replace(options[currentOption].toUpperCase(Locale.getDefault()), "xxx");
 				currentOption = (currentOption - 1) % numOptions; 
 				if(currentOption == -1) 
 					currentOption += numOptions;
-				teacher_home.setText(options[currentOption]);
-				teacher_home.setContentDescription(options[currentOption]);
+				teacherHome.setText(options[currentOption]);
+				teacherHome.setContentDescription(options[currentOption]);
 			}
 			
 			// Swipe right
 			else {
+				homeHelp = homeHelp.replace(options[currentOption].toUpperCase(Locale.getDefault()), "xxx");
 				currentOption = (currentOption + 1) % numOptions; 
-				teacher_home.setText(options[currentOption]);
-				teacher_home.setContentDescription(options[currentOption]);
+				teacherHome.setText(options[currentOption]);
+				teacherHome.setContentDescription(options[currentOption]);
 			}
 
 			return true;
