@@ -77,6 +77,7 @@
 	<string name="y">y</string>
 	<string name="z">z</string>
 	
+	<string name="animal_game">animal game</string>
 	<string name="dot_practice">dot practice</string>
 	<string name="find_dot">find dot</string>
 	<string name="free_play">free play</string>
@@ -89,6 +90,7 @@
 	<string name="now_press">now press</string>
 	<string name="please_press">please press</string>
 	<string name="please_write">please write</string>
+	<string name="please_write_the_animal">please write the animal</string>
 	<string name="press">press</string>
 	<string name="to_write_the_letter">to write the letter</string>
 	<string name="try_again">try again</string>

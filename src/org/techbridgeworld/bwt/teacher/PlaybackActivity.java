@@ -31,7 +31,8 @@ public class PlaybackActivity extends Activity implements TextToSpeech.OnInitLis
 	private SensorManager manager;
 	private ShakeEventListener listener;
 	
-	MediaPlayer player;
+	private String dir; 
+	private MediaPlayer player;
 	
 	private String playbackPrompt;
 	private String playbackHelp;
@@ -123,23 +124,25 @@ public class PlaybackActivity extends Activity implements TextToSpeech.OnInitLis
 				teacherPlayback.setContentDescription(options[currentOption]); 
 				break;
 			case 2:				
-				numOptions = 15; 
+				numOptions = 17; 
 				options = new String[numOptions]; 
-				options[0] = getResources().getString(R.string.dot_practice);
-				options[1] = getResources().getString(R.string.find_dot);
-				options[2] = getResources().getString(R.string.free_play);
-				options[3] = getResources().getString(R.string.free_spelling);
-				options[4] = getResources().getString(R.string.good);
-				options[5] = getResources().getString(R.string.learn_dots);
-				options[6] = getResources().getString(R.string.learn_letters);
-				options[7] = getResources().getString(R.string.letter_practice);
-				options[8] = getResources().getString(R.string.no);
-				options[9] = getResources().getString(R.string.now_press);
-				options[10] = getResources().getString(R.string.please_press);
-				options[11] = getResources().getString(R.string.please_write);
-				options[12] = getResources().getString(R.string.press);
-				options[13] = getResources().getString(R.string.to_write_the_letter);
-				options[14] = getResources().getString(R.string.try_again);
+				options[0] = getResources().getString(R.string.animal_game);
+				options[1] = getResources().getString(R.string.dot_practice);
+				options[2] = getResources().getString(R.string.find_dot);
+				options[3] = getResources().getString(R.string.free_play);
+				options[4] = getResources().getString(R.string.free_spelling);
+				options[5] = getResources().getString(R.string.good);
+				options[6] = getResources().getString(R.string.learn_dots);
+				options[7] = getResources().getString(R.string.learn_letters);
+				options[8] = getResources().getString(R.string.letter_practice);
+				options[9] = getResources().getString(R.string.no);
+				options[10] = getResources().getString(R.string.now_press);
+				options[11] = getResources().getString(R.string.please_press);
+				options[12] = getResources().getString(R.string.please_write);
+				options[13] = getResources().getString(R.string.please_write_the_animal);
+				options[14] = getResources().getString(R.string.press);
+				options[15] = getResources().getString(R.string.to_write_the_letter);
+				options[16] = getResources().getString(R.string.try_again);
 				
 				playbackPrompt = playbackPrompt.replace("xxx", "phrase");
 				playbackHelp = playbackHelp.replace("zzz", "phrases");
@@ -149,31 +152,32 @@ public class PlaybackActivity extends Activity implements TextToSpeech.OnInitLis
 			default:
 		}
 		
-		final String dir = getApplicationContext().getFilesDir().getPath().toString();
 		player = new MediaPlayer();
+		dir = getApplicationContext().getFilesDir().getPath().toString();
 		
 		teacherPlayback.setOnHoverListener(new OnHoverListener() {
 			@Override
 			public boolean onHover(View v, MotionEvent event) {
-				FileInputStream fis;
-				try {
-					String filename = options[currentOption].replaceAll(" ", "_");
-					fis = new FileInputStream(dir + "/" + filename + ".m4a");
-					player.reset();
-					player.setDataSource(fis.getFD());
-					fis.close();
-					player.prepare();
-					player.start();
-				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
-				} catch (IllegalStateException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace(); 
+				if(!player.isPlaying()) {
+					FileInputStream fis;
+					try {
+						String filename = options[currentOption].replaceAll(" ", "_");
+						fis = new FileInputStream(dir + "/" + filename + ".m4a");
+						player.reset();
+						player.setDataSource(fis.getFD());
+						fis.close();
+						player.prepare();
+						player.start();
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					} catch (IllegalStateException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace(); 
+					}
 				}
-				
 				return true;
-			}	
+			}
 		});
 	}
 	
