@@ -24,6 +24,7 @@
 	<string name="record_help">Tap and hold to begin recording xxx. Release when you are done. Swipe down to save your recording or swipe up to cancel. Swipe right to record the next item.</string>
 	
 	<string name="start">Start</string>
+	<string name="record">Record </string>
 	
 	<string name="rotate_180">Please rotate the phone 180 degrees.</string>
     <string name="rotate_90_right">Please rotate the phone 90 degrees to the right.</string>

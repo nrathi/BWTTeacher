@@ -5,7 +5,7 @@
     android:background="#000000" >
 
     <TextView
-        android:id="@+id/teacher_language"
+        android:id="@+id/language_textview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
