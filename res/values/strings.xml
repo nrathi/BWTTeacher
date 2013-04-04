@@ -3,47 +3,25 @@
 
     <string name="app_name">BWT for Teachers</string>
     
-    <string name="welcome_prompt_first">Welcome! This app lets you change the language and recordings associated with your BWT. Swipe down to select. Swipe up to go back. Swipe left or right to change options. Shake the phone at any time for help.</string>
-    <string name="password_prompt_first">This screen has four quadrants. Top left is one, top right is two, bottom left is three, and bottom right is four. Please enter your password. </string>
-    <string name="record_prompt_first">Tap and hold to begin recording xxx. Release when you are done. Swipe down to save your recording or swipe up to cancel. Swipe right to record the next item.</string>
-    
-    <string name="welcome_prompt">Welcome!</string>
-	<string name="password_prompt">Please enter your password.</string>
-	<string name="home_prompt">Please select a menu option.</string>
-	<string name="language_prompt">Please select a language.</string>
-	<string name="category_prompt">Please select a category.</string>
-	<string name="playback_prompt">Please select a xxx to record.</string>
-	<string name="record_prompt">Please tap and hold to record xxx.</string>
+    <string name="game_prompt">Please select a game.</string>
+    <string name="category_prompt">Please select a category.</string>
+	<string name="options_prompt">Please select a sound.</string>
+	<string name="record_prompt">Please hold the volume up button to record. Release when you are done.</string>
 	
-	<string name="welcome_help">This app lets you change the language and recordings associated with your BWT. Swipe down to select. Swipe up to go back. Swipe left or right to change options.</string>
-	<string name="password_help">This screen has four quadrants. Top left is one, top right is two, bottom left is three, and bottom right is four. If you forgot your password, please contact a Tech Bridge World assistant.</string>
-	<string name="home_help">Your menu options are Record Sounds and Settings. Your current selection is xxx. Swipe down to select.</string>
-	<string name="language_help">Your language options are English, Kannada, and Hindi. Your current selection is xxx. Swipe down to select.</string>
-	<string name="category_help">Your category options are Numbers, Letters, and Phrases. Your current selection is xxx in the language yyy. Swipe down to select.</string>
-	<string name="playback_help">Your recording options are zzz in the language yyy. Your current selection is xxx. Tap to hear the current recording or swipe down to select.</string>
-	<string name="record_help">Tap and hold to begin recording xxx. Release when you are done. Swipe down to save your recording or swipe up to cancel. Swipe right to record the next item.</string>
-	
-	<string name="start">Start</string>
-	<string name="record">Record </string>
-	
-	<string name="rotate_180">Please rotate the phone 180 degrees.</string>
-    <string name="rotate_90_right">Please rotate the phone 90 degrees to the right.</string>
-    <string name="rotate_90_left">Please rotate the phone 90 degrees to the left.</string>
-	
-	<string name="period">.</string>
-	<string name="dot">Dot</string>
-	
-	<string name="record_sounds">Record Sounds</string>
-	<string name="settings">Settings</string>
-	
-	<string name="english">English</string>
-	<string name="kannada">Kannada</string>
-	<string name="hindi">Hindi</string>
-	
-	<string name="numbers">Numbers</string>
-	<string name="letters">Letters</string>
-	<string name="phrases">Phrases</string>
-	
+	<string name="game_help">This app lets you change the recordings associated with your BWT. Double tap a game to record sounds within that game.</string>
+	<string name="category_help">Double tap a category to record sound within it.</string>
+	<string name="options_help">Double tap a sound to record it.</string>
+	<string name="record_help">Hold the volume up button to record. Release when you are done.</string>
+
+	<string name="hangman">hangman</string>
+	<string name="animal_game">animal game</string>
+	<string name="learn_letters">learn letters</string>
+	<string name="learn_dots">learn dots</string>
+
+	<string name="numbers">numbers</string>
+	<string name="letters">letters</string>
+	<string name="phrases">phrases</string>
+		
 	<string name="one">one</string>
 	<string name="two">two</string>
 	<string name="three">three</string>
@@ -78,22 +56,32 @@
 	<string name="y">y</string>
 	<string name="z">z</string>
 	
-	<string name="animal_game">animal game</string>
-	<string name="dot_practice">dot practice</string>
 	<string name="find_dot">find dot</string>
-	<string name="free_play">free play</string>
-	<string name="free_spelling">free spelling</string>
 	<string name="good">good</string>
-	<string name="learn_dots">learn dots</string>
-	<string name="learn_letters">learn letters</string>
-	<string name="letter_practice">letter practice</string>
-	<string name="no">no</string>
-	<string name="now_press">now press</string>
+	<string name="no">no</string>	
+	
 	<string name="please_press">please press</string>
 	<string name="please_write">please write</string>
-	<string name="please_write_the_animal">please write the animal</string>
-	<string name="press">press</string>
 	<string name="to_write_the_letter">to write the letter</string>
-	<string name="try_again">try again</string>
 	
+	<string name="please_write_the_name">please write the name of the animal that makes the sound</string>
+	<string name="the_correct_answer_was">the correct answer was</string>
+	<string name="press">press</string>
+	
+	<string name="but_you_have">but you have one last chance to guess the entire word</string>
+	<string name="dash">dash</string>
+	<string name="guess_a_letter">guess a letter</string>
+	<string name="mistake">mistake</string>
+	<string name="mistakes">mistakes</string>
+	<string name="so_far">so far the word is</string>
+	<string name="the_new_word">the new word has</string>
+	<string name="youve_already">you\'ve already guessed that letter.</string>
+	<string name="youve_made">you\'ve made</string>
+	
+	<string name="next_items">next items</string>
+	
+	<string name="playback">playback</string>
+	<string name="save">save</string>
+	<string name="save_and_next">save and next</string>
+	<string name="cancel">cancel</string>
 </resources>

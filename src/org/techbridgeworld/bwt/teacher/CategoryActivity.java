@@ -6,56 +6,86 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.support.v4.view.GestureDetectorCompat;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.widget.TextView;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 public class CategoryActivity extends Activity {
 
 	private MyApplication application;
-
 	private TextToSpeech tts;
-
-	private static final int SWIPE_MIN_DISTANCE = 120;
-	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-	private GestureDetectorCompat detector;
+	private Button[] buttons;
 
 	private SensorManager manager;
 	private ShakeEventListener listener;
 
-	private String language;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.teacher_category);
+		setContentView(R.layout.list);
 
 		application = ((MyApplication) getApplicationContext());
-
-		Bundle extras = getIntent().getExtras();
-		language = (String) extras.get("language");
-
-		String[] options = new String[3];
-		options[0] = getResources().getString(R.string.numbers);
-		options[1] = getResources().getString(R.string.letters);
-		options[2] = getResources().getString(R.string.phrases);
-
-		application.options = options;
-		application.currentOption = 0;
-
+		
 		application.prompt = getResources().getString(R.string.category_prompt);
 		application.help = getResources().getString(R.string.category_help);
-		application.help = application.help.replace("yyy", language);
-		application.textView = (TextView) findViewById(R.id.category_textview);
 
-		tts = application.myTTS;
-		application.speakOut(application.prompt);
-
-		detector = new GestureDetectorCompat(this, new MyGestureListener());
-
+		String options[] = null;
+		switch (application.game) {
+		//Hangman
+		case 0: 
+			options = new String[3]; 
+			options[0] = getResources().getString(R.string.numbers);
+			options[1] = getResources().getString(R.string.letters);
+			options[2] = getResources().getString(R.string.phrases);
+			break;
+		//Animal Game
+		case 1: 
+			options = new String[3];
+			options[0] = getResources().getString(R.string.numbers);
+			options[1] = getResources().getString(R.string.letters);
+			options[2] = getResources().getString(R.string.phrases);
+			break;
+		//Learn Letters
+		case 2:
+			options = new String[3];
+			options[0] = getResources().getString(R.string.numbers);
+			options[1] = getResources().getString(R.string.letters);
+			options[2] = getResources().getString(R.string.phrases);
+			break;
+		//Learn Dots
+		case 3:
+			options = new String[2];
+			options[0] = getResources().getString(R.string.numbers);
+			options[1] = getResources().getString(R.string.phrases);
+			break;
+		default:
+		}
+		
+		buttons = new Button[3];
+		buttons[0] = (Button) findViewById(R.id.one);
+		buttons[1] = (Button) findViewById(R.id.two);
+		buttons[2] = (Button) findViewById(R.id.three);
+		
+		for(int i = 0; i < options.length; i++) {
+			final int j = i; 
+			buttons[i].setText(options[i]);
+			buttons[i].setContentDescription(options[i]);
+			buttons[i].setVisibility(View.VISIBLE);
+			buttons[i].setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					application.category = application.game * 3 + j;
+					Intent intent = new Intent(CategoryActivity.this, OptionsActivity.class);
+					startActivity(intent);
+				}
+			}); 
+		}
+		
 		manager = application.myManager;
 		listener = application.myListener;
+		
+		tts = application.myTTS;
+		application.speakOut(application.prompt);
 	}
 
 	@Override
@@ -79,52 +109,5 @@ public class CategoryActivity extends Activity {
 			tts.shutdown();
 		}
 		super.onDestroy();
-	}
-
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		this.detector.onTouchEvent(event);
-		return super.onTouchEvent(event);
-	}
-
-	class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-
-		@Override
-		public boolean onFling(MotionEvent event1, MotionEvent event2,
-				float velocityX, float velocityY) {
-			// If the user swipes up, go to the language activity
-			if (event1.getY() - event2.getY() > SWIPE_MIN_DISTANCE
-					&& Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-				Intent intent = new Intent(CategoryActivity.this,
-						LanguageActivity.class);
-				startActivity(intent);
-			}
-
-			// If the user swipes down, go to the playback activity
-			else if (event2.getY() - event1.getY() > SWIPE_MIN_DISTANCE
-					&& Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-				Intent intent = new Intent(CategoryActivity.this,
-						PlaybackActivity.class);
-				intent.putExtra("language", language);
-				intent.putExtra("category", application.currentOption);
-				intent.putExtra("currentOption", 0);
-				startActivity(intent);
-			}
-
-			// If the user swipes left, go to the next option on the left
-			else if (event1.getX() - event2.getX() > SWIPE_MIN_DISTANCE
-					&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-				application.moveLeft();
-				application.changeText();
-			}
-
-			// If the user swipes right, go to the next option on the right
-			else {
-				application.moveRight();
-				application.changeText();
-			}
-
-			return true;
-		}
 	}
 }

@@ -2,149 +2,172 @@ package org.techbridgeworld.bwt.teacher;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
-import android.support.v4.view.GestureDetectorCompat;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnHoverListener;
-import android.widget.TextView;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 public class RecordActivity extends Activity {
 
 	private MyApplication application;
-
 	private TextToSpeech tts;
-
-	private Vibrator vibrator;
-
-	private static final int SWIPE_MIN_DISTANCE = 120;
-	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-	private GestureDetectorCompat detector;
+	private Button[] buttons;
 
 	private SensorManager manager;
 	private ShakeEventListener listener;
-
+	
 	private MediaRecorder recorder;
 	private MediaPlayer player;
-
+	private boolean isRecording;
+	private boolean hasRecorded; 
+	
 	private Context context;
 	private String dir;
 	private String filename;
 
-	private String language;
-	private int category;
-
-	private boolean recording;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.teacher_record);
+		setContentView(R.layout.list);
 
 		application = ((MyApplication) getApplicationContext());
-
-		Bundle extras = getIntent().getExtras();
-		language = (String) extras.get("language");
-		category = (Integer) extras.get("category");
-		application.options = (String[]) extras.get("options");
-		application.currentOption = (Integer) extras.get("currentOption");
-		recording = false;
-
+		
 		application.prompt = getResources().getString(R.string.record_prompt);
-		application.prompt = application.prompt.replace("xxx",
-				application.getOption());
 		application.help = getResources().getString(R.string.record_help);
-		application.textView = (TextView) findViewById(R.id.record_textview);
 
-		manager = application.myManager;
-		listener = application.myListener;
-
-		// If this is the first run of the record activity, give them a more
-		// detailed prompt
-		SharedPreferences prefs = getSharedPreferences("BWT", 0);
-		if (prefs.getBoolean("firstRunRecord", true)) {
-			application.prompt = getResources().getString(
-					R.string.record_prompt_first);
-			application.prompt = application.prompt.replace("xxx",
-					application.getOption());
-			SharedPreferences.Editor editor = prefs.edit();
-			editor.putBoolean("firstRunRecord", false);
-			editor.commit();
-		}
-
-		tts = application.myTTS;
-		application.speakOut(application.prompt);
-
-		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-		detector = new GestureDetectorCompat(this, new MyGestureListener());
-
-		context = getApplicationContext();
-		dir = context.getFilesDir().getPath().toString();
 		recorder = new MediaRecorder();
 		player = new MediaPlayer();
-
-		// If the user hovers on textView, vibrate once to indicate the
-		// beginning of a recording; when the user releases, vibrate again
-		// to indicate the end of the recording
-		application.textView.setOnHoverListener(new OnHoverListener() {
+		isRecording = false;
+		hasRecorded = false;
+		
+		context = getApplicationContext();
+		dir = context.getFilesDir().getPath().toString();
+		
+		String options[] = new String[3];
+		options[0] = getResources().getString(R.string.playback);
+		options[1] = getResources().getString(R.string.save);
+		options[2] = getResources().getString(R.string.cancel);
+		
+		buttons = new Button[3];
+		
+		//Playback
+		buttons[0] = (Button) findViewById(R.id.one);
+		buttons[0].setOnClickListener(new OnClickListener() {
 			@Override
-			public boolean onHover(View v, MotionEvent event) {
-				if (recording == false) {
-					filename = application.getOption().replaceAll(" ", "_");
-					recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-					recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-					recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-					recorder.setOutputFile(dir + "/" + filename + "_temp.m4a");
-
-					try {
-						recorder.prepare();
-					} catch (IllegalStateException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					vibrator.vibrate(200);
-					recorder.start();
-					recording = true;
-				} else {
-					recorder.reset();
-					vibrator.vibrate(200);
-
+			public void onClick(View v) {
+				if (!player.isPlaying()) {
 					FileInputStream fis;
-					try {
-						fis = new FileInputStream(dir + "/" + filename
-								+ "_temp.m4a");
-						player.reset();
-						player.setDataSource(fis.getFD());
-						fis.close();
-						player.prepare();
-						player.start();
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-					} catch (IllegalStateException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					recording = false;
+					filename = application.option.replaceAll(" ", "_");
+						try {
+							if(!hasRecorded)
+								fis = new FileInputStream(dir + "/" + filename + ".m4a");
+							else
+								fis = new FileInputStream(dir + "/" + filename + "_temp.m4a");
+							player.reset();
+							player.setDataSource(fis.getFD());
+							fis.close();
+							player.prepare();
+							player.start();
+						} catch (FileNotFoundException e) {
+							application.speakOut(application.option);
+						} catch (IllegalArgumentException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IllegalStateException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 				}
-				return true;
+			}
+		}); 
+		
+		//Save
+		buttons[1] = (Button) findViewById(R.id.two);
+		buttons[1].setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				context.deleteFile(filename + ".m4a");
+				File oldFile = context.getFileStreamPath(filename + "_temp.m4a");
+				File newFile = context.getFileStreamPath(filename + ".m4a");
+				oldFile.renameTo(newFile);
+	
+				Intent intent = new Intent(RecordActivity.this, OptionsActivity.class);
+				startActivity(intent);
 			}
 		});
+		
+		//Cancel
+		buttons[2] = (Button) findViewById(R.id.three);
+		buttons[2].setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				context.deleteFile(filename + "_temp.m4a");
+	
+				Intent intent = new Intent(RecordActivity.this, OptionsActivity.class);
+				startActivity(intent);
+			}
+		});
+		
+		for(int i = 0; i < options.length; i++) {
+			buttons[i].setText(options[i]);
+			buttons[i].setContentDescription(options[i]);
+			buttons[i].setVisibility(View.VISIBLE);
+		}
+		
+		manager = application.myManager;
+		listener = application.myListener;
+		
+		tts = application.myTTS;
+		application.speakOut(application.prompt);
+	}
+	
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+	    int action = event.getAction();
+	    if (event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP) {
+            if (action == KeyEvent.ACTION_DOWN && isRecording == false) {
+            	Log.i("neha", "action down?"); 
+				filename = application.option.replaceAll(" ", "_");
+				recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+				recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+				recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+				recorder.setOutputFile(dir + "/" + filename + "_temp.m4a");
+				try {
+					recorder.prepare();
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				recorder.start();
+				if(!hasRecorded)
+					hasRecorded = true; 
+				isRecording = true; 
+            }
+            else if(action == KeyEvent.ACTION_UP && isRecording == true) {
+            	Log.i("neha", "action up?"); 
+				recorder.reset();
+				isRecording = false; 
+            }
+            return true;
+	    }
+	    return super.dispatchKeyEvent(event);
 	}
 
 	@Override
@@ -162,94 +185,11 @@ public class RecordActivity extends Activity {
 	}
 
 	@Override
-	protected void onStop() {
-		if (recorder != null)
-			recorder.release();
-		if (player != null)
-			player.release();
-		super.onStop();
-	}
-
-	@Override
 	public void onDestroy() {
 		if (tts != null) {
 			tts.stop();
 			tts.shutdown();
 		}
 		super.onDestroy();
-	}
-
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		this.detector.onTouchEvent(event);
-		return super.onTouchEvent(event);
-	}
-
-	class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-
-		@Override
-		public boolean onFling(MotionEvent event1, MotionEvent event2,
-				float velocityX, float velocityY) {
-			// If the user swipes down, save the recording and go to the
-			// playback activity
-			if (event1.getY() - event2.getY() > SWIPE_MIN_DISTANCE
-					&& Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-				context.deleteFile(filename + "_temp.m4a");
-
-				Intent intent = new Intent(RecordActivity.this,
-						PlaybackActivity.class);
-				intent.putExtra("language", language);
-				intent.putExtra("category", category);
-				intent.putExtra("currentOption", application.currentOption);
-				startActivity(intent);
-			}
-
-			// If the user swipes down, don't save the recording and go to the
-			// playback activity
-			else if (event2.getY() - event1.getY() > SWIPE_MIN_DISTANCE
-					&& Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-				context.deleteFile(filename + ".m4a");
-				File oldFile = context
-						.getFileStreamPath(filename + "_temp.m4a");
-				File newFile = context.getFileStreamPath(filename + ".m4a");
-				oldFile.renameTo(newFile);
-
-				Intent intent = new Intent(RecordActivity.this,
-						PlaybackActivity.class);
-				intent.putExtra("language", language);
-				intent.putExtra("category", category);
-				intent.putExtra("currentOption", application.currentOption);
-				startActivity(intent);
-			}
-
-			// If the user swipes right, save the recording and go to the next
-			// option on the left
-			else if (event1.getX() - event2.getX() > SWIPE_MIN_DISTANCE
-					&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-				context.deleteFile(filename + ".m4a");
-				File oldFile = context
-						.getFileStreamPath(filename + "_temp.m4a");
-				File newFile = context.getFileStreamPath(filename + ".m4a");
-				oldFile.renameTo(newFile);
-
-				application.moveRight();
-				application.changePrompt();
-			}
-
-			// If the user swipes right, save the recording and go to the next
-			// option on the left
-			else {
-				context.deleteFile(filename + ".m4a");
-				File oldFile = context
-						.getFileStreamPath(filename + "_temp.m4a");
-				File newFile = context.getFileStreamPath(filename + ".m4a");
-				oldFile.renameTo(newFile);
-
-				application.moveRight();
-				application.changePrompt();
-			}
-
-			return true;
-		}
 	}
 }
