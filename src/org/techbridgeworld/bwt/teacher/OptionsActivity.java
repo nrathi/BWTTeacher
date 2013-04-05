@@ -99,36 +99,38 @@ public class OptionsActivity extends Activity {
 			break;
 		//Hangman, Phrases
 		case 2: 
-			options = new String[14];
+			options = new String[15];
 			options[0] = getResources().getString(R.string.but_you_have); 
 			options[1] = getResources().getString(R.string.dash);
 			options[2] = getResources().getString(R.string.good);
 			options[3] = getResources().getString(R.string.guess_a_letter);
-			options[4] = getResources().getString(R.string.letters);
+			options[4] = getResources().getString(R.string.invalid_input);
 			options[5] = getResources().getString(R.string.next_items);
 			
-			options[6] = getResources().getString(R.string.mistake);
-			options[7] = getResources().getString(R.string.mistakes);
-			options[8] = getResources().getString(R.string.no);
-			options[9] = getResources().getString(R.string.so_far);
-			options[10] = getResources().getString(R.string.the_new_word);
+			options[6] = getResources().getString(R.string.letters);
+			options[7] = getResources().getString(R.string.mistake);
+			options[8] = getResources().getString(R.string.mistakes);
+			options[9] = getResources().getString(R.string.no);
+			options[10] = getResources().getString(R.string.so_far);
 			options[11] = getResources().getString(R.string.next_items);
 			
-			options[12] = getResources().getString(R.string.youve_already);
-			options[13] = getResources().getString(R.string.youve_made);
+			options[12] = getResources().getString(R.string.the_new_word);
+			options[13] = getResources().getString(R.string.youve_already);
+			options[14] = getResources().getString(R.string.youve_made);
 			break;
 		//Animal Game, Phrases
 		case 5: 
-			options = new String[8];
+			options = new String[9];
 			options[0] = getResources().getString(R.string.good);
-			options[1] = getResources().getString(R.string.no);
-			options[2] = getResources().getString(R.string.please_write);
-			options[3] = getResources().getString(R.string.please_write_the_name);
-			options[4] = getResources().getString(R.string.press);
+			options[1] = getResources().getString(R.string.invalid_input);
+			options[2] = getResources().getString(R.string.no);
+			options[3] = getResources().getString(R.string.please_write);
+			options[4] = getResources().getString(R.string.please_write_the_name);
 			options[5] = getResources().getString(R.string.next_items);
 			
-			options[6] = getResources().getString(R.string.the_correct_answer_was);
-			options[7] = getResources().getString(R.string.to_write_the_letter);
+			options[6] = getResources().getString(R.string.press);
+			options[7] = getResources().getString(R.string.the_correct_answer_was);
+			options[8] = getResources().getString(R.string.to_write_the_letter);
 			break;
 		//Learn Letters, Phrases
 		case 8:

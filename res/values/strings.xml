@@ -64,6 +64,7 @@
 	<string name="please_write">please write</string>
 	<string name="to_write_the_letter">to write the letter</string>
 	
+	<string name="invalid_input">invalid input</string>
 	<string name="please_write_the_name">please write the name of the animal that makes the sound</string>
 	<string name="the_correct_answer_was">the correct answer was</string>
 	<string name="press">press</string>
