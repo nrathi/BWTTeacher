@@ -41,10 +41,10 @@ public class GameActivity extends Activity {
 		application.help = getResources().getString(R.string.game_help);
 		
 		String[] options = new String[4];
-		options[0] = getResources().getString(R.string.hangman);
-		options[1] = getResources().getString(R.string.animal_game);
-		options[2] = getResources().getString(R.string.learn_letters);
-		options[3] = getResources().getString(R.string.learn_dots);
+		options[0] = getResources().getString(R.string.learn_dots);
+		options[1] = getResources().getString(R.string.learn_letters);
+		options[2] = getResources().getString(R.string.animal_game);
+		options[3] = getResources().getString(R.string.hangman);
 		
 		buttons = new Button[5];
 		buttons[0] = (Button) findViewById(R.id.one);

@@ -20,7 +20,8 @@
 
 	<string name="numbers">numbers</string>
 	<string name="letters">letters</string>
-	<string name="phrases">phrases</string>
+	<string name="instructions">instructions</string>
+	<string name="words">words</string>
 		
 	<string name="one">one</string>
 	<string name="two">two</string>
@@ -85,4 +86,6 @@
 	<string name="save">save</string>
 	<string name="save_and_next">save and next</string>
 	<string name="cancel">cancel</string>
+	
+	<string name="placeholder">placeholder</string>
 </resources>

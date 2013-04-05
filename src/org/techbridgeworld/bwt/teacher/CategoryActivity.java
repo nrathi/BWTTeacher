@@ -31,40 +31,37 @@ public class CategoryActivity extends Activity {
 
 		String options[] = null;
 		switch (application.game) {
-		//Hangman
-		case 0: 
-			options = new String[3]; 
-			options[0] = getResources().getString(R.string.numbers);
-			options[1] = getResources().getString(R.string.letters);
-			options[2] = getResources().getString(R.string.phrases);
-			break;
-		//Animal Game
-		case 1: 
-			options = new String[3];
-			options[0] = getResources().getString(R.string.numbers);
-			options[1] = getResources().getString(R.string.letters);
-			options[2] = getResources().getString(R.string.phrases);
-			break;
-		//Learn Letters
-		case 2:
-			options = new String[3];
-			options[0] = getResources().getString(R.string.numbers);
-			options[1] = getResources().getString(R.string.letters);
-			options[2] = getResources().getString(R.string.phrases);
-			break;
 		//Learn Dots
-		case 3:
+		case 0: 
 			options = new String[2];
 			options[0] = getResources().getString(R.string.numbers);
-			options[1] = getResources().getString(R.string.phrases);
+			options[1] = getResources().getString(R.string.instructions);
 			break;
+		//Animal Game and Learn Letters
+		case 1:
+		case 2: 
+			options = new String[3];
+			options[0] = getResources().getString(R.string.numbers);
+			options[1] = getResources().getString(R.string.letters);
+			options[2] = getResources().getString(R.string.instructions);
+			break;
+		//Hangman
+		case 3:
+			options = new String[4]; 
+			options[0] = getResources().getString(R.string.numbers);
+			options[1] = getResources().getString(R.string.letters);
+			options[2] = getResources().getString(R.string.instructions);
+			options[3] = getResources().getString(R.string.words);
+			break;
+
 		default:
 		}
 		
-		buttons = new Button[3];
+		buttons = new Button[4];
 		buttons[0] = (Button) findViewById(R.id.one);
 		buttons[1] = (Button) findViewById(R.id.two);
 		buttons[2] = (Button) findViewById(R.id.three);
+		buttons[3] = (Button) findViewById(R.id.four);
 		
 		for(int i = 0; i < options.length; i++) {
 			final int j = i; 
@@ -74,7 +71,8 @@ public class CategoryActivity extends Activity {
 			buttons[i].setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					application.category = application.game * 3 + j;
+					application.category = application.game * 3 + j - 1;
+					application.category += application.game == 0 ? 1 : 0;
 					Intent intent = new Intent(CategoryActivity.this, OptionsActivity.class);
 					startActivity(intent);
 				}

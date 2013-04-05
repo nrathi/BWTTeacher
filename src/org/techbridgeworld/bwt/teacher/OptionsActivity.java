@@ -46,9 +46,9 @@ public class OptionsActivity extends Activity {
 		switch (application.category) {
 		//Numbers
 		case 0:
-		case 3:
-		case 6:
-		case 9:
+		case 2:
+		case 5:
+		case 8:
 			options = new String[6];
 			options[0] = getResources().getString(R.string.one);
 			options[1] = getResources().getString(R.string.two);
@@ -58,9 +58,9 @@ public class OptionsActivity extends Activity {
 			options[5] = getResources().getString(R.string.six);
 			break;
 		//Letters
-		case 1:
-		case 4:
-		case 7:
+		case 3:
+		case 6:
+		case 9:
 			options = new String[30];
 			options[0] = getResources().getString(R.string.a);
 			options[1] = getResources().getString(R.string.b);
@@ -97,8 +97,38 @@ public class OptionsActivity extends Activity {
 			options[28] = getResources().getString(R.string.y);
 			options[29] = getResources().getString(R.string.z);
 			break;
+		//Learn Dots, Phrases
+		case 1:
+			options = new String[3];
+			options[0] = getResources().getString(R.string.find_dot);
+			options[1] = getResources().getString(R.string.good);
+			options[2] = getResources().getString(R.string.no);
+			break;	
+		//Learn Letters, Phrases
+		case 4:
+			options = new String[5];
+			options[0] = getResources().getString(R.string.good);
+			options[1] = getResources().getString(R.string.no);
+			options[2] = getResources().getString(R.string.please_press);
+			options[3] = getResources().getString(R.string.please_write);
+			options[4] = getResources().getString(R.string.to_write_the_letter);
+			break;
+		//Animal Game, Phrases
+		case 7: 
+			options = new String[9];
+			options[0] = getResources().getString(R.string.good);
+			options[1] = getResources().getString(R.string.invalid_input);
+			options[2] = getResources().getString(R.string.no);
+			options[3] = getResources().getString(R.string.please_write);
+			options[4] = getResources().getString(R.string.please_write_the_name);
+			options[5] = getResources().getString(R.string.next_items);
+			
+			options[6] = getResources().getString(R.string.press);
+			options[7] = getResources().getString(R.string.the_correct_answer_was);
+			options[8] = getResources().getString(R.string.to_write_the_letter);
+			break;
 		//Hangman, Phrases
-		case 2: 
+		case 10: 
 			options = new String[15];
 			options[0] = getResources().getString(R.string.but_you_have); 
 			options[1] = getResources().getString(R.string.dash);
@@ -118,36 +148,11 @@ public class OptionsActivity extends Activity {
 			options[13] = getResources().getString(R.string.youve_already);
 			options[14] = getResources().getString(R.string.youve_made);
 			break;
-		//Animal Game, Phrases
-		case 5: 
-			options = new String[9];
-			options[0] = getResources().getString(R.string.good);
-			options[1] = getResources().getString(R.string.invalid_input);
-			options[2] = getResources().getString(R.string.no);
-			options[3] = getResources().getString(R.string.please_write);
-			options[4] = getResources().getString(R.string.please_write_the_name);
-			options[5] = getResources().getString(R.string.next_items);
-			
-			options[6] = getResources().getString(R.string.press);
-			options[7] = getResources().getString(R.string.the_correct_answer_was);
-			options[8] = getResources().getString(R.string.to_write_the_letter);
+		//Hangman, Words
+		case 11: 
+			options = new String[1];
+			options[0] = getResources().getString(R.string.placeholder); 
 			break;
-		//Learn Letters, Phrases
-		case 8:
-			options = new String[5];
-			options[0] = getResources().getString(R.string.good);
-			options[1] = getResources().getString(R.string.no);
-			options[2] = getResources().getString(R.string.please_press);
-			options[3] = getResources().getString(R.string.please_write);
-			options[4] = getResources().getString(R.string.to_write_the_letter);
-			break;
-		//Learn Dots, Phrases
-		case 10:
-			options = new String[3];
-			options[0] = getResources().getString(R.string.find_dot);
-			options[1] = getResources().getString(R.string.good);
-			options[2] = getResources().getString(R.string.no);
-			break;	
 		default:
 			options = null; 
 		}
