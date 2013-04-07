@@ -43,6 +43,15 @@ public class OptionsActivity extends Activity {
 		application.prompt = getResources().getString(R.string.options_prompt);
 		application.help = getResources().getString(R.string.options_help);
 
+		tts = application.myTTS;
+		application.speakOut(application.prompt);
+		
+		manager = application.myManager;
+		listener = application.myListener;
+		
+		player = new MediaPlayer();
+		dir = getApplicationContext().getFilesDir().getPath().toString();
+		
 		switch (application.category) {
 		//Numbers
 		case 0:
@@ -165,16 +174,7 @@ public class OptionsActivity extends Activity {
 		buttons[4] = (Button) findViewById(R.id.five);
 		buttons[5] = (Button) findViewById(R.id.six);
 		
-		makeButtons(); 
-		
-		manager = application.myManager;
-		listener = application.myListener;
-		
-		player = new MediaPlayer();
-		dir = getApplicationContext().getFilesDir().getPath().toString();
-		
-		tts = application.myTTS;
-		application.speakOut(application.prompt);
+		makeButtons();
 	}
 
 	private void makeButtons() {
@@ -248,6 +248,7 @@ public class OptionsActivity extends Activity {
 	@Override
 	protected void onPause() {
 		manager.unregisterListener(listener);
+		tts.stop();
 		super.onPause();
 	}
 
@@ -263,10 +264,16 @@ public class OptionsActivity extends Activity {
 	// If the user presses back, go to the previous list if applicable
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && currentList > 0) {
-			currentList--;
-			makeButtons();
-			return true; 
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if(currentList > 0) {
+				currentList--;
+				makeButtons();
+				return true; 
+			}
+			else {
+				Intent intent = new Intent(OptionsActivity.this, CategoryActivity.class);
+				startActivity(intent);
+			}
 		}
 		return super.onKeyDown(keyCode, event);
 	}

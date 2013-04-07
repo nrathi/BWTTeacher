@@ -35,6 +35,7 @@ public class MyApplication extends Application implements TextToSpeech.OnInitLis
 			int result = myTTS.setLanguage(Locale.US);
 			if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
 				Log.e("TTS", "This language is not supported");
+			speakOut(prompt); 
 		}
 		else
 			Log.e("TTS", "Initilization Failed!");
@@ -45,7 +46,7 @@ public class MyApplication extends Application implements TextToSpeech.OnInitLis
 	 * @param text
 	 */
 	public void speakOut(String text) {
-		myTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+		myTTS.speak(text, TextToSpeech.QUEUE_ADD, null);
 	}
 
 }

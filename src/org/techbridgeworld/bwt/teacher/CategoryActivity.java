@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -28,6 +29,12 @@ public class CategoryActivity extends Activity {
 		
 		application.prompt = getResources().getString(R.string.category_prompt);
 		application.help = getResources().getString(R.string.category_help);
+		
+		tts = application.myTTS;
+		application.speakOut(application.prompt);
+		
+		manager = application.myManager;
+		listener = application.myListener;
 
 		String options[] = null;
 		switch (application.game) {
@@ -53,7 +60,6 @@ public class CategoryActivity extends Activity {
 			options[2] = getResources().getString(R.string.instructions);
 			options[3] = getResources().getString(R.string.words);
 			break;
-
 		default:
 		}
 		
@@ -78,12 +84,6 @@ public class CategoryActivity extends Activity {
 				}
 			}); 
 		}
-		
-		manager = application.myManager;
-		listener = application.myListener;
-		
-		tts = application.myTTS;
-		application.speakOut(application.prompt);
 	}
 
 	@Override
@@ -97,6 +97,7 @@ public class CategoryActivity extends Activity {
 	@Override
 	protected void onPause() {
 		manager.unregisterListener(listener);
+		tts.stop();
 		super.onPause();
 	}
 
@@ -107,5 +108,13 @@ public class CategoryActivity extends Activity {
 			tts.shutdown();
 		}
 		super.onDestroy();
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			Intent intent = new Intent(CategoryActivity.this, GameActivity.class);
+			startActivity(intent);
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

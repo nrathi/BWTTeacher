@@ -14,7 +14,6 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,7 +46,13 @@ public class RecordActivity extends Activity {
 		
 		application.prompt = getResources().getString(R.string.record_prompt);
 		application.help = getResources().getString(R.string.record_help);
-
+		
+		tts = application.myTTS;
+		application.speakOut(application.prompt);
+		
+		manager = application.myManager;
+		listener = application.myListener;
+		
 		recorder = new MediaRecorder();
 		player = new MediaPlayer();
 		isRecording = false;
@@ -82,7 +87,7 @@ public class RecordActivity extends Activity {
 							player.prepare();
 							player.start();
 						} catch (FileNotFoundException e) {
-							application.speakOut(application.option);
+							application.speakOut(application.option); 
 						} catch (IllegalArgumentException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -128,13 +133,7 @@ public class RecordActivity extends Activity {
 			buttons[i].setText(options[i]);
 			buttons[i].setContentDescription(options[i]);
 			buttons[i].setVisibility(View.VISIBLE);
-		}
-		
-		manager = application.myManager;
-		listener = application.myListener;
-		
-		tts = application.myTTS;
-		application.speakOut(application.prompt);
+		}		
 	}
 	
 	@Override
@@ -142,7 +141,7 @@ public class RecordActivity extends Activity {
 	    int action = event.getAction();
 	    if (event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP) {
             if (action == KeyEvent.ACTION_DOWN && isRecording == false) {
-            	Log.i("neha", "action down?"); 
+            	tts.stop();
 				filename = application.option.replaceAll(" ", "_");
 				recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 				recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
@@ -161,7 +160,6 @@ public class RecordActivity extends Activity {
 				isRecording = true; 
             }
             else if(action == KeyEvent.ACTION_UP && isRecording == true) {
-            	Log.i("neha", "action up?"); 
 				recorder.reset();
 				isRecording = false; 
             }
@@ -181,6 +179,7 @@ public class RecordActivity extends Activity {
 	@Override
 	protected void onPause() {
 		manager.unregisterListener(listener);
+		tts.stop();
 		super.onPause();
 	}
 
@@ -191,5 +190,17 @@ public class RecordActivity extends Activity {
 			tts.shutdown();
 		}
 		super.onDestroy();
+	}
+	
+	// If the user presses back, act the same as a cancel
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			context.deleteFile(filename + "_temp.m4a");
+			Intent intent = new Intent(RecordActivity.this, OptionsActivity.class);
+			startActivity(intent);
+			return true; 
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

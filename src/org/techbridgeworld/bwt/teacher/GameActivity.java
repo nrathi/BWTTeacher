@@ -38,7 +38,13 @@ public class GameActivity extends Activity {
 		application = ((MyApplication) getApplicationContext());
 		
 		application.prompt = getResources().getString(R.string.game_prompt);
-		application.help = getResources().getString(R.string.game_help);
+		application.help = getResources().getString(R.string.game_help);	
+		
+		tts = application.myTTS;
+		application.speakOut(application.prompt);
+		
+		manager = application.myManager;
+		listener = application.myListener;
 		
 		String[] options = new String[4];
 		options[0] = getResources().getString(R.string.learn_dots);
@@ -103,12 +109,6 @@ public class GameActivity extends Activity {
 			editor.putBoolean("firstRun", false);
 			editor.commit();
 		}
-		
-		manager = application.myManager;
-		listener = application.myListener;
-		
-		tts = application.myTTS;
-		application.speakOut(application.prompt);
 	}
 
 	@Override
@@ -122,6 +122,7 @@ public class GameActivity extends Activity {
 	@Override
 	protected void onPause() {
 		manager.unregisterListener(listener);
+		tts.stop();
 		super.onPause();
 	}
 
