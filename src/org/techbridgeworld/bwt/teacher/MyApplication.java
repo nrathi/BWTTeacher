@@ -1,7 +1,15 @@
 package org.techbridgeworld.bwt.teacher;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -11,9 +19,13 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Application;
 import android.content.Context;
@@ -26,10 +38,12 @@ public class MyApplication extends Application implements TextToSpeech.OnInitLis
 
 	public TextToSpeech myTTS;
 	public SensorManager myManager;
-	public ShakeEventListener myListener; 
+	public ShakeEventListener myListener;
 
 	public String prompt, help, option;
-	public int game, category; 
+	public int game, category;
+	
+	public ArrayList<String> hangmanWords;
 
 	@Override
 	public void onCreate () {
@@ -72,7 +86,7 @@ public class MyApplication extends Application implements TextToSpeech.OnInitLis
 			// Creating HTTP client
 			HttpClient httpClient = new DefaultHttpClient();
 			// Creating HTTP Post
-			HttpPost httpPost = new HttpPost("http://192.168.1.111:3000/login");
+			HttpPost httpPost = new HttpPost("http://128.237.201.182:3000/login");
 
 			// Building post parameters
 			// key and value pair
@@ -102,8 +116,87 @@ public class MyApplication extends Application implements TextToSpeech.OnInitLis
 				e.printStackTrace();
 				Log.d("jeff", "io exception");
 			}
+			
+			HttpResponse response = null;
+			hangmanWords = new ArrayList<String>();
+			try {        
+		        HttpClient client = new DefaultHttpClient();
+		        HttpGet request = new HttpGet();
+		        request.setURI(new URI("http://128.237.201.182:3000/words"));
+		        response = client.execute(request);
+		        Log.d("jeff",  response.toString());
+		        responseStreamToJSON(response.getEntity().getContent());
+		        
+				Log.i("jeff", "Hangman words arraylist: " + hangmanWords);
+		    } catch (URISyntaxException e) {
+		        e.printStackTrace();
+		        Log.d("jeff", "urisyntax");
+		    } catch (ClientProtocolException e) {
+		        // TODO Auto-generated catch block
+		        e.printStackTrace();
+		        Log.d("jeff", "client protocol");
+		    } catch (IOException e) {
+		        // TODO Auto-generated catch block
+		        e.printStackTrace();
+		        Log.d("jeff", "io exception");
+		    }
 			return null;
 		}
+	}
+	
+	private void responseStreamToJSON(InputStream responseStream) {
+		String str = "";
+		if(responseStream != null) {
+			Writer writer = new StringWriter();
+			char[] buffer = new char[1024];
+			try {
+				Reader reader = new BufferedReader(new InputStreamReader(
+						responseStream, "UTF-8"), 1024);
+				int n;
+				while( (n = reader.read(buffer)) != -1) {
+					writer.write(buffer, 0, n);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				Log.e("jeff", "responseStream for hangman - Reader IO Exception");
+			} finally {
+				try {
+					responseStream.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					Log.e("jeff", "responseStream for hangman couldn't close");
+					e.printStackTrace();
+				}
+			}
+			str = writer.toString();
+			Log.i("jeff", "responseStream as a string: " + str);
+		}
+
+		//Create JSONArray out of what came from the inputStream in response
+		JSONArray hangmanJSON = null;
+		try {
+			hangmanJSON = new JSONArray(str);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			Log.e("jeff", "responseStream - JSONExceptions");
+			e.printStackTrace();
+		}
 		
+		//Convert JSONArray into an ArrayList of Strings (hangmanWords)
+		if(hangmanJSON != null) {
+			for(int i = 0; i < hangmanJSON.length(); i++) {
+				JSONObject row;
+				try {
+					row = hangmanJSON.getJSONObject(i);
+					hangmanWords.add(row.getString("word"));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					Log.e("jeff", "responseStream (converting to array) - JSONExceptions");
+					e.printStackTrace();
+				}
+				
+			}
+		}
 	}
 }

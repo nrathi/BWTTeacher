@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -66,8 +67,6 @@ public class OptionsActivity extends Activity {
 		
 		player = new MediaPlayer();
 		dir = getApplicationContext().getFilesDir().getPath().toString();
-		
-		new HTTPAsyncTask().execute();
 		Log.d("jeff", "word request sent");
 		// TODO: instantiate data structure; get request; fill data structure
 		//database = new HashMap<String, String>();
@@ -180,9 +179,21 @@ public class OptionsActivity extends Activity {
 			break;
 		//Hangman, Words
 		case 11: 
-			options = new String[1];
-			options[0] = getResources().getString(R.string.placeholder); 
-			// TODO : use data structure to fill options; data structure is in scope bc defined at top
+			ArrayList<String> arr = application.hangmanWords;
+			options = new String[arr.size() + arr.size()/6];
+			if(arr != null) {
+				int optCount = 0;
+				for (int i = 0; i < arr.size(); i++) {
+					if((optCount+1)%6 == 0) {
+						options[optCount] = getResources().getString(R.string.next_items);
+						i--;
+					}
+					else {
+						options[optCount] = arr.get(i);
+					}
+					optCount++;
+				}
+			}
 			break;
 		default:
 			options = null; 
@@ -300,31 +311,4 @@ public class OptionsActivity extends Activity {
 		return super.onKeyDown(keyCode, event);
 	}
 	
-	public class HTTPAsyncTask extends AsyncTask<Void, Integer, Void> {
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			HttpResponse response = null;
-			try {        
-		        HttpClient client = new DefaultHttpClient();
-		        HttpGet request = new HttpGet();
-		        request.setURI(new URI("http://192.168.1.111:3000/words"));
-		        response = client.execute(request);
-		        Log.d("jeff",  response.toString());
-		    } catch (URISyntaxException e) {
-		        e.printStackTrace();
-		        Log.d("jeff", "urisyntax");
-		    } catch (ClientProtocolException e) {
-		        // TODO Auto-generated catch block
-		        e.printStackTrace();
-		        Log.d("jeff", "client protocol");
-		    } catch (IOException e) {
-		        // TODO Auto-generated catch block
-		        e.printStackTrace();
-		        Log.d("jeff", "io exception");
-		    }
-			return null; 
-		}
-		
-	}
 }
