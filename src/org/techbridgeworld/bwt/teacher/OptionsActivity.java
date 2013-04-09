@@ -3,14 +3,25 @@ package org.techbridgeworld.bwt.teacher;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.techbridgeworld.bwt.teacher.MyApplication.HTTPAsyncTask;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,8 +42,12 @@ public class OptionsActivity extends Activity {
 	private String dir; 
 	
 	private String[] options; 
-	private int currentList = 0;  
-
+	private int currentList = 0; 
+	
+	// TODO: declare data structure for words
+	// private String database; 
+	// private HashMap<String, String> database; 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,6 +66,12 @@ public class OptionsActivity extends Activity {
 		
 		player = new MediaPlayer();
 		dir = getApplicationContext().getFilesDir().getPath().toString();
+		
+		new HTTPAsyncTask().execute();
+		Log.d("jeff", "word request sent");
+		// TODO: instantiate data structure; get request; fill data structure
+		//database = new HashMap<String, String>();
+		//database.add(key, value); <-- something like that 
 		
 		switch (application.category) {
 		//Numbers
@@ -161,6 +182,7 @@ public class OptionsActivity extends Activity {
 		case 11: 
 			options = new String[1];
 			options[0] = getResources().getString(R.string.placeholder); 
+			// TODO : use data structure to fill options; data structure is in scope bc defined at top
 			break;
 		default:
 			options = null; 
@@ -276,5 +298,33 @@ public class OptionsActivity extends Activity {
 			}
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	public class HTTPAsyncTask extends AsyncTask<Void, Integer, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			HttpResponse response = null;
+			try {        
+		        HttpClient client = new DefaultHttpClient();
+		        HttpGet request = new HttpGet();
+		        request.setURI(new URI("http://192.168.1.111:3000/words"));
+		        response = client.execute(request);
+		        Log.d("jeff",  response.toString());
+		    } catch (URISyntaxException e) {
+		        e.printStackTrace();
+		        Log.d("jeff", "urisyntax");
+		    } catch (ClientProtocolException e) {
+		        // TODO Auto-generated catch block
+		        e.printStackTrace();
+		        Log.d("jeff", "client protocol");
+		    } catch (IOException e) {
+		        // TODO Auto-generated catch block
+		        e.printStackTrace();
+		        Log.d("jeff", "io exception");
+		    }
+			return null; 
+		}
+		
 	}
 }
