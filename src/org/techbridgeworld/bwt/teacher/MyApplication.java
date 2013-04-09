@@ -55,8 +55,7 @@ public class MyApplication extends Application implements TextToSpeech.OnInitLis
 				speakOut(help);
 			}
 		});
-		new HTTPAsyncTask().execute();
-		
+		new HTTPAsyncTask().execute();		
 	}
 
 	@Override
@@ -80,7 +79,6 @@ public class MyApplication extends Application implements TextToSpeech.OnInitLis
 	}
 	
 	public class HTTPAsyncTask extends AsyncTask<Void, Integer, Void> {
-
 		@Override
 		protected Void doInBackground(Void... params) {
 			// Creating HTTP client
@@ -106,15 +104,15 @@ public class MyApplication extends Application implements TextToSpeech.OnInitLis
 			try {
 				HttpResponse response = httpClient.execute(httpPost);
 				// writing response to log
-				Log.d("jeff", response.toString());
+				Log.d("HTTP", response.toString());
 			} catch (ClientProtocolException e) {
 				// writing exception to log
 				e.printStackTrace();
-				Log.d("jeff", "client protocol exception");
+				Log.d("HTTP", "client protocol exception");
 			} catch (IOException e) {
 				// writing exception to log
 				e.printStackTrace();
-				Log.d("jeff", "io exception");
+				Log.d("HTTP", "io exception");
 			}
 			
 			HttpResponse response = null;
@@ -124,21 +122,21 @@ public class MyApplication extends Application implements TextToSpeech.OnInitLis
 		        HttpGet request = new HttpGet();
 		        request.setURI(new URI("http://128.237.201.182:3000/words"));
 		        response = client.execute(request);
-		        Log.d("jeff",  response.toString());
+		        Log.d("HTTP",  response.toString());
 		        responseStreamToJSON(response.getEntity().getContent());
 		        
-				Log.i("jeff", "Hangman words arraylist: " + hangmanWords);
+				Log.i("HTTP", "Hangman words arraylist: " + hangmanWords);
 		    } catch (URISyntaxException e) {
 		        e.printStackTrace();
-		        Log.d("jeff", "urisyntax");
+		        Log.d("HTTP", "urisyntax");
 		    } catch (ClientProtocolException e) {
 		        // TODO Auto-generated catch block
 		        e.printStackTrace();
-		        Log.d("jeff", "client protocol");
+		        Log.d("HTTP", "client protocol");
 		    } catch (IOException e) {
 		        // TODO Auto-generated catch block
 		        e.printStackTrace();
-		        Log.d("jeff", "io exception");
+		        Log.d("HTTP", "io exception");
 		    }
 			return null;
 		}
@@ -159,18 +157,18 @@ public class MyApplication extends Application implements TextToSpeech.OnInitLis
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				Log.e("jeff", "responseStream for hangman - Reader IO Exception");
+				Log.e("HTTP", "responseStream for hangman - Reader IO Exception");
 			} finally {
 				try {
 					responseStream.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					Log.e("jeff", "responseStream for hangman couldn't close");
+					Log.e("HTTP", "responseStream for hangman couldn't close");
 					e.printStackTrace();
 				}
 			}
 			str = writer.toString();
-			Log.i("jeff", "responseStream as a string: " + str);
+			Log.i("HTTP", "responseStream as a string: " + str);
 		}
 
 		//Create JSONArray out of what came from the inputStream in response
@@ -179,7 +177,7 @@ public class MyApplication extends Application implements TextToSpeech.OnInitLis
 			hangmanJSON = new JSONArray(str);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
-			Log.e("jeff", "responseStream - JSONExceptions");
+			Log.e("HTTP", "responseStream - JSONExceptions");
 			e.printStackTrace();
 		}
 		
@@ -192,7 +190,7 @@ public class MyApplication extends Application implements TextToSpeech.OnInitLis
 					hangmanWords.add(row.getString("word"));
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
-					Log.e("jeff", "responseStream (converting to array) - JSONExceptions");
+					Log.e("HTTP", "responseStream (converting to array) - JSONExceptions");
 					e.printStackTrace();
 				}
 				

@@ -3,26 +3,15 @@ package org.techbridgeworld.bwt.teacher;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.techbridgeworld.bwt.teacher.MyApplication.HTTPAsyncTask;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,10 +34,6 @@ public class OptionsActivity extends Activity {
 	private String[] options; 
 	private int currentList = 0; 
 	
-	// TODO: declare data structure for words
-	// private String database; 
-	// private HashMap<String, String> database; 
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,10 +52,6 @@ public class OptionsActivity extends Activity {
 		
 		player = new MediaPlayer();
 		dir = getApplicationContext().getFilesDir().getPath().toString();
-		Log.d("jeff", "word request sent");
-		// TODO: instantiate data structure; get request; fill data structure
-		//database = new HashMap<String, String>();
-		//database.add(key, value); <-- something like that 
 		
 		switch (application.category) {
 		//Numbers
@@ -184,7 +165,7 @@ public class OptionsActivity extends Activity {
 			if(arr != null) {
 				int optCount = 0;
 				for (int i = 0; i < arr.size(); i++) {
-					if((optCount+1)%6 == 0) {
+					if((optCount+1) % 6 == 0) {
 						options[optCount] = getResources().getString(R.string.next_items);
 						i--;
 					}
