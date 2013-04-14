@@ -25,16 +25,16 @@ public final class R {
         public static final int list=0x7f030000;
     }
     public static final class raw {
-        public static final int bee=0x7f040000;
-        public static final int camel=0x7f040001;
-        public static final int cat=0x7f040002;
-        public static final int cow=0x7f040003;
-        public static final int dog=0x7f040004;
-        public static final int horse=0x7f040005;
-        public static final int pig=0x7f040006;
-        public static final int rooster=0x7f040007;
-        public static final int sheep=0x7f040008;
-        public static final int zebra=0x7f040009;
+        public static final int bee_sound=0x7f040000;
+        public static final int camel_sound=0x7f040001;
+        public static final int cat_sound=0x7f040002;
+        public static final int cow_sound=0x7f040003;
+        public static final int dog_sound=0x7f040004;
+        public static final int horse_sound=0x7f040005;
+        public static final int pig_sound=0x7f040006;
+        public static final int rooster_sound=0x7f040007;
+        public static final int sheep_sound=0x7f040008;
+        public static final int zebra_sound=0x7f040009;
     }
     public static final class string {
         public static final int a=0x7f050017;

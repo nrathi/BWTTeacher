@@ -220,7 +220,8 @@ public class OptionsActivity extends Activity {
 									player.prepare();
 									player.start();
 								} catch (FileNotFoundException e) {
-									application.speakOut(options[j]);
+									if(!tts.isSpeaking())
+										application.speakOut(options[j]);
 								} catch (IllegalArgumentException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
