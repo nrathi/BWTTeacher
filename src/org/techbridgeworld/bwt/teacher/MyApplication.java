@@ -35,8 +35,7 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 /**
- * MyApplication initializes and stores the objects used throughout the
- * activities in this application. It also stores all "global" variables.
+ * MyApplication initializes and stores all global objects and variables.
  * MyApplication is created before any activity in the application.
  * 
  * @author neharathi
@@ -63,12 +62,12 @@ public class MyApplication extends Application implements
 	// Represents the teachers' category selection
 	public int category;
 
-	// The teachers' option selection
-	public String option;
+	// The teachers' sound selection
+	public String sound;
 
 	// The IP address of the server
-	public String SERVER_ADDRESS = "http://128.237.204.45:3000"; 
-	
+	public String SERVER_ADDRESS = "http://128.237.204.45:3000";
+
 	// Stores the Hangman words from the server
 	public ArrayList<String> hangmanWords;
 
@@ -78,8 +77,9 @@ public class MyApplication extends Application implements
 		myTTS = new TextToSpeech(this, this);
 		myManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		myListener = new ShakeEventListener();
+		
+		// When the phone is shaken, speak the help text aloud
 		myListener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
-			// When the phone is shaking, speak the help text aloud
 			public void onShake() {
 				speakOut(help);
 			}
@@ -94,14 +94,14 @@ public class MyApplication extends Application implements
 			if (result == TextToSpeech.LANG_MISSING_DATA
 					|| result == TextToSpeech.LANG_NOT_SUPPORTED)
 				Log.e("TTS", "This language is not supported");
-			// When myTTS is initialized, speak the prompt text aloud 
+			// When myTTS is initialized, speak the prompt text aloud
 			speakOut(prompt);
 		} else
 			Log.e("TTS", "Initilization Failed!");
 	}
 
 	/**
-	 * Speaks text aloud using Text To Speech. 
+	 * Speaks text aloud using Text To Speech.
 	 * 
 	 * @param text
 	 */
@@ -112,12 +112,11 @@ public class MyApplication extends Application implements
 	/**
 	 * HTTPAsyncTask populates hangmanWords on a background thread. To do this,
 	 * it makes a POST request to the server with the admin's credentials. The
-	 * server sends back a response containing the Hangman words. 
+	 * server sends back a response containing the Hangman words.
 	 * 
 	 * @author neharathi
 	 */
 	public class HTTPAsyncTask extends AsyncTask<Void, Integer, Void> {
-		
 		@Override
 		protected Void doInBackground(Void... params) {
 			// Initialize HTTP Post
@@ -154,7 +153,6 @@ public class MyApplication extends Application implements
 		}
 	}
 
-	
 	/**
 	 * Populates hangmanWords using the response stream.
 	 * 

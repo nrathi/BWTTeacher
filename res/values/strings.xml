@@ -3,16 +3,16 @@
 
     <string name="app_name">BWT for Teachers</string>
 
-    <string name="game_prompt">Welcome! This app lets you change the recordings associated with your BWT. Double tap a game to record sounds within it. Shake for help at anytime.</string>
+    <string name="game_prompt_first">Welcome! This app lets you change the recordings associated with your BWT. Double tap a game to record sounds within it. Shake for help at anytime.</string>
     
     <string name="game_prompt">Please select a game.</string>
     <string name="category_prompt">Please select a category.</string>
-	<string name="options_prompt">Please select a sound.</string>
+	<string name="sound_prompt">Please select a sound.</string>
 	<string name="record_prompt">Please hold the volume up button to record. Release when you are done.</string>
 	
 	<string name="game_help">This app lets you change the recordings associated with your BWT. Double tap a game to record sounds within it.</string>
 	<string name="category_help">Double tap a category to record sounds within it.</string>
-	<string name="options_help">Double tap a sound to record it.</string>
+	<string name="sound_help">Double tap a sound to record it.</string>
 	<string name="record_help">Hold the volume up button to record. Release when you are done.</string>
 
 	<string name="hangman">hangman</string>
@@ -31,6 +31,8 @@
 	<string name="four">four</string>
 	<string name="five">five</string>
 	<string name="six">six</string>
+	<string name="seven">seven</string>
+	<string name="eight">eight</string>
 	
 	<string name="a">a</string>
 	<string name="b">b</string>
@@ -84,7 +86,7 @@
 	
 	<string name="next_items">next items</string>
 	
-	<string name="playback">playback</string>
+	<string name="play">play</string>
 	<string name="save">save</string>
 	<string name="save_and_next">save and next</string>
 	<string name="cancel">cancel</string>
