@@ -34,166 +34,176 @@ import android.os.AsyncTask;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
-public class MyApplication extends Application implements TextToSpeech.OnInitListener {
+/**
+ * MyApplication initializes and stores the objects used throughout the
+ * activities in this application. It also stores all "global" variables.
+ * MyApplication is created before any activity in the application.
+ * 
+ * @author neharathi
+ */
+public class MyApplication extends Application implements
+		TextToSpeech.OnInitListener {
 
+	// Speaks text aloud
 	public TextToSpeech myTTS;
+
+	// Detects the phone shaking
 	public SensorManager myManager;
 	public ShakeEventListener myListener;
 
-	public String prompt, help, option;
-	public int game, category;
+	// The text given upon opening an activity
+	public String prompt;
+
+	// The text given upon shaking the phone
+	public String help;
+
+	// Represents the teachers' game selection
+	public int game;
+
+	// Represents the teachers' category selection
+	public int category;
+
+	// The teachers' option selection
+	public String option;
+
+	// The IP address of the server
+	public String SERVER_ADDRESS = "http://128.237.204.45:3000"; 
 	
+	// Stores the Hangman words from the server
 	public ArrayList<String> hangmanWords;
 
 	@Override
-	public void onCreate () {
-		myTTS = new TextToSpeech(this, this); 
+	public void onCreate() {
+		// Initializes myTTS, myManager, and myListener
+		myTTS = new TextToSpeech(this, this);
 		myManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		myListener = new ShakeEventListener();   
+		myListener = new ShakeEventListener();
 		myListener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
+			// When the phone is shaking, speak the help text aloud
 			public void onShake() {
 				speakOut(help);
 			}
 		});
-		new HTTPAsyncTask().execute();		
+		new HTTPAsyncTask().execute();
 	}
 
 	@Override
 	public void onInit(int status) {
 		if (status == TextToSpeech.SUCCESS) {
 			int result = myTTS.setLanguage(Locale.US);
-			if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
+			if (result == TextToSpeech.LANG_MISSING_DATA
+					|| result == TextToSpeech.LANG_NOT_SUPPORTED)
 				Log.e("TTS", "This language is not supported");
-			speakOut(prompt); 
-		}
-		else
+			// When myTTS is initialized, speak the prompt text aloud 
+			speakOut(prompt);
+		} else
 			Log.e("TTS", "Initilization Failed!");
 	}
 
 	/**
-	 * Use TextToSpeech to speak a string out loud
+	 * Speaks text aloud using Text To Speech. 
+	 * 
 	 * @param text
 	 */
 	public void speakOut(String text) {
 		myTTS.speak(text, TextToSpeech.QUEUE_ADD, null);
 	}
-	
+
+	/**
+	 * HTTPAsyncTask populates hangmanWords on a background thread. To do this,
+	 * it makes a POST request to the server with the admin's credentials. The
+	 * server sends back a response containing the Hangman words. 
+	 * 
+	 * @author neharathi
+	 */
 	public class HTTPAsyncTask extends AsyncTask<Void, Integer, Void> {
+		
 		@Override
 		protected Void doInBackground(Void... params) {
-			// Creating HTTP client
-			HttpClient httpClient = new DefaultHttpClient();
-			// Creating HTTP Post
-			HttpPost httpPost = new HttpPost("http://128.237.204.45:3000/login");
+			// Initialize HTTP Post
+			HttpPost post = new HttpPost(SERVER_ADDRESS + "/login");
 
-			// Building post parameters
-			// key and value pair
+			// Initialize the POST parameters
 			List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(2);
 			nameValuePair.add(new BasicNameValuePair("username", "admin"));
 			nameValuePair.add(new BasicNameValuePair("password", "admin"));
 
-			// Url Encoding the POST parameters
+			// URL encode the POST parameters
 			try {
-				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair));
+				post.setEntity(new UrlEncodedFormEntity(nameValuePair));
 			} catch (UnsupportedEncodingException e) {
-				// writing error to Log
 				e.printStackTrace();
 			}
 
-			// Making HTTP Request
-			try {
-				HttpResponse response = httpClient.execute(httpPost);
-				// writing response to log
-				Log.d("HTTP", response.toString());
-			} catch (ClientProtocolException e) {
-				// writing exception to log
-				e.printStackTrace();
-				Log.d("HTTP", "client protocol exception");
-			} catch (IOException e) {
-				// writing exception to log
-				e.printStackTrace();
-				Log.d("HTTP", "io exception");
-			}
-			
 			HttpResponse response = null;
 			hangmanWords = new ArrayList<String>();
-			try {        
-		        HttpClient client = new DefaultHttpClient();
-		        HttpGet request = new HttpGet();
-		        request.setURI(new URI("http://128.237.204.45:3000/words"));
-		        response = client.execute(request);
-		        Log.d("HTTP",  response.toString());
-		        responseStreamToJSON(response.getEntity().getContent());
-		        
-				Log.i("HTTP", "Hangman words arraylist: " + hangmanWords);
-		    } catch (URISyntaxException e) {
-		        e.printStackTrace();
-		        Log.d("HTTP", "urisyntax");
-		    } catch (ClientProtocolException e) {
-		        // TODO Auto-generated catch block
-		        e.printStackTrace();
-		        Log.d("HTTP", "client protocol");
-		    } catch (IOException e) {
-		        // TODO Auto-generated catch block
-		        e.printStackTrace();
-		        Log.d("HTTP", "io exception");
-		    }
+			try {
+				HttpClient client = new DefaultHttpClient();
+				HttpGet get = new HttpGet();
+				get.setURI(new URI(SERVER_ADDRESS + "/words"));
+				response = client.execute(get);
+				populateHangmanWords(response.getEntity().getContent());
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			return null;
 		}
 	}
+
 	
-	private void responseStreamToJSON(InputStream responseStream) {
-		String str = "";
-		if(responseStream != null) {
+	/**
+	 * Populates hangmanWords using the response stream.
+	 * 
+	 * @param responseStream
+	 */
+	private void populateHangmanWords(InputStream responseStream) {
+		// Convert responseStream to a JSON-encoded string (json)
+		String json = "";
+		if (responseStream != null) {
 			Writer writer = new StringWriter();
 			char[] buffer = new char[1024];
 			try {
 				Reader reader = new BufferedReader(new InputStreamReader(
 						responseStream, "UTF-8"), 1024);
 				int n;
-				while( (n = reader.read(buffer)) != -1) {
+				while ((n = reader.read(buffer)) != -1) {
 					writer.write(buffer, 0, n);
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-				Log.e("HTTP", "responseStream for hangman - Reader IO Exception");
 			} finally {
 				try {
 					responseStream.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					Log.e("HTTP", "responseStream for hangman couldn't close");
 					e.printStackTrace();
 				}
 			}
-			str = writer.toString();
-			Log.i("HTTP", "responseStream as a string: " + str);
+			json = writer.toString();
 		}
 
-		//Create JSONArray out of what came from the inputStream in response
+		// Use json to create a JSONArray (hangmanJSON)
 		JSONArray hangmanJSON = null;
 		try {
-			hangmanJSON = new JSONArray(str);
+			hangmanJSON = new JSONArray(json);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			Log.e("HTTP", "responseStream - JSONExceptions");
 			e.printStackTrace();
 		}
-		
-		//Convert JSONArray into an ArrayList of Strings (hangmanWords)
-		if(hangmanJSON != null) {
-			for(int i = 0; i < hangmanJSON.length(); i++) {
+
+		// Use hangmanJSON to populate hangmanWords
+		if (hangmanJSON != null) {
+			for (int i = 0; i < hangmanJSON.length(); i++) {
 				JSONObject row;
 				try {
 					row = hangmanJSON.getJSONObject(i);
 					hangmanWords.add(row.getString("word"));
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					Log.e("HTTP", "responseStream (converting to array) - JSONExceptions");
 					e.printStackTrace();
 				}
-				
+
 			}
 		}
 	}

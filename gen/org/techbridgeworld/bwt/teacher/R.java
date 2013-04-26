@@ -81,7 +81,6 @@ public final class R {
         public static final int options_help=0x7f050007;
         public static final int options_prompt=0x7f050003;
         public static final int p=0x7f050026;
-        public static final int placeholder=0x7f050049;
         public static final int playback=0x7f050045;
         public static final int please_press=0x7f050034;
         public static final int please_write=0x7f050035;
