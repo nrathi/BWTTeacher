@@ -3,17 +3,17 @@
 
     <string name="app_name">BWT for Teachers</string>
 
-    <string name="game_prompt_first">Welcome! This app lets you change the recordings associated with your BWT. Double tap a game to record sounds within it. Shake for help at anytime.</string>
+    <string name="game_prompt_first">Welcome! This app lets you change the reecordings associated with your BWT. Double tap a game to reecord sounds within it. Shake for help at anytime.</string>
     
     <string name="game_prompt">Please select a game.</string>
     <string name="category_prompt">Please select a category.</string>
 	<string name="sound_prompt">Please select a sound.</string>
-	<string name="record_prompt">Please hold the volume up button to record. Release when you are done.</string>
+	<string name="record_prompt">Please hold the volume up button to reecord. Release when you are done.</string>
 	
-	<string name="game_help">This app lets you change the recordings associated with your BWT. Double tap a game to record sounds within it.</string>
-	<string name="category_help">Double tap a category to record sounds within it.</string>
-	<string name="sound_help">Double tap a sound to record it.</string>
-	<string name="record_help">Hold the volume up button to record. Release when you are done.</string>
+	<string name="game_help">This app lets you change the reecordings associated with your BWT. Double tap a game to reecord sounds within it.</string>
+	<string name="category_help">Double tap a category to reecord sounds within it.</string>
+	<string name="sound_help">Double tap a sound to reecord it.</string>
+	<string name="record_help">Hold the volume up button to reecord. Release when you are done.</string>
 
 	<string name="hangman">hangman</string>
 	<string name="animal_game">animal game</string>

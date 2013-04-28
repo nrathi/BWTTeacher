@@ -66,8 +66,8 @@ public class SoundActivity extends Activity {
 		listener = application.myListener;
 
 		// Set the prompt and help text
-		application.prompt = getResources().getString(R.string.game_prompt);
-		application.help = getResources().getString(R.string.game_help);
+		application.prompt = getResources().getString(R.string.sound_prompt);
+		application.help = getResources().getString(R.string.sound_help);
 
 		// Speak the prompt text aloud
 		application.speakOut(application.prompt);

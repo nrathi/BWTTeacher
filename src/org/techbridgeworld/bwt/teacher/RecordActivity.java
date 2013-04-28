@@ -75,8 +75,8 @@ public class RecordActivity extends Activity {
 		listener = application.myListener;
 
 		// Set the prompt and help text
-		application.prompt = getResources().getString(R.string.game_prompt);
-		application.help = getResources().getString(R.string.game_help);
+		application.prompt = getResources().getString(R.string.record_prompt);
+		application.help = getResources().getString(R.string.record_help);
 
 		// Speak the prompt text aloud
 		application.speakOut(application.prompt);
