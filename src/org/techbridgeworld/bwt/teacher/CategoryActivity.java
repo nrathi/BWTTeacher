@@ -46,8 +46,8 @@ public class CategoryActivity extends Activity {
 		listener = application.myListener;
 
 		// Set the prompt and help text
-		application.prompt = getResources().getString(R.string.game_prompt);
-		application.help = getResources().getString(R.string.game_help);
+		application.prompt = getResources().getString(R.string.category_prompt);
+		application.help = getResources().getString(R.string.category_help);
 
 		// Speak the prompt text aloud
 		application.speakOut(application.prompt);
