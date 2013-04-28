@@ -129,7 +129,7 @@ public class GameActivity extends Activity {
 					buffer = baos.toByteArray();
 
 					FileOutputStream fos = openFileOutput(field.getName()
-							+ ".m4a", 0);
+							+ ".m4a", MODE_PRIVATE);
 					fos.write(buffer);
 					fos.close();
 				} catch (NotFoundException e) {
