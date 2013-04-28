@@ -66,7 +66,7 @@ public class MyApplication extends Application implements
 	public String sound;
 
 	// The IP address of the server
-	public String SERVER_ADDRESS = "http://128.237.204.45:3000";
+	public String SERVER_ADDRESS = "http://128.237.196.208:3000";
 
 	// Stores the Hangman words from the server
 	public ArrayList<String> hangmanWords;

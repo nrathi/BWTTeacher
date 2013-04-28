@@ -288,13 +288,10 @@ public class SoundActivity extends Activity {
 								if (!tts.isSpeaking())
 									application.speakOut(options[j]);
 							} catch (IllegalArgumentException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							} catch (IllegalStateException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							} catch (IOException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
