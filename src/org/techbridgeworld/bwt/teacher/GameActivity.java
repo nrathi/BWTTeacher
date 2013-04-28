@@ -106,7 +106,7 @@ public class GameActivity extends Activity {
 		 * more detailed version, store the audio files on internal storage, and
 		 * note that the first run of GameActivity has occurred.
 		 */
-		SharedPreferences prefs = getSharedPreferences("BWT", 0);
+		SharedPreferences prefs = getSharedPreferences("BWT", MODE_PRIVATE);
 		if (prefs.getBoolean("firstRun", true)) {
 			// Set the prompt text to be more detailed version
 			application.prompt = getResources().getString(
