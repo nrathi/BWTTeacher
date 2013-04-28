@@ -70,7 +70,7 @@ public class GameActivity extends Activity {
 		options[3] = getResources().getString(R.string.hangman);
 
 		// Initialize buttons such that it has the same length as options
-		buttons = new Button[5];
+		buttons = new Button[4];
 		buttons[0] = (Button) findViewById(R.id.one);
 		buttons[1] = (Button) findViewById(R.id.two);
 		buttons[2] = (Button) findViewById(R.id.three);
