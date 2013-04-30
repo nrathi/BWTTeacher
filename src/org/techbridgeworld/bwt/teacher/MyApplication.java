@@ -77,14 +77,14 @@ public class MyApplication extends Application implements
 		myTTS = new TextToSpeech(this, this);
 		myManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		myListener = new ShakeEventListener();
-		
+
 		// When the phone is shaken, speak the help text aloud
 		myListener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
 			public void onShake() {
 				speakOut(help);
 			}
 		});
-		
+
 		// Populate hangmanWords
 		new HTTPAsyncTask().execute();
 	}
@@ -147,7 +147,7 @@ public class MyApplication extends Application implements
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
-				hangmanWords = null; 
+				hangmanWords = null;
 				e.printStackTrace();
 			}
 			return null;
