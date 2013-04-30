@@ -13,6 +13,7 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -206,24 +207,21 @@ public class SoundActivity extends Activity {
 		// Words (Hangman)
 		case 11:
 			/*
-			 * If hangmanWords is null, alert the user that an internet
-			 * connection is required to get these words for Hangman and take
-			 * them back to CategoryActivity.
+			 * If hangmanWords is empty, alert the user and tell to ensure that
+			 * the server is running and an Internet connection is established
+			 * before going to CategoryActivity.
 			 */
-			if (application.hangmanWords == null) {
+			if (application.hangmanWords.size() == 0) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						SoundActivity.this);
-				builder.setMessage(R.string.internet_required)
-						.setPositiveButton(R.string.ok,
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int id) {
-										Intent intent = new Intent(
-												SoundActivity.this,
-												CategoryActivity.class);
-										startActivity(intent);
-									}
-								});
+				builder.setMessage(R.string.no_words).setPositiveButton(
+						R.string.ok, new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								Intent intent = new Intent(SoundActivity.this,
+										CategoryActivity.class);
+								startActivity(intent);
+							}
+						});
 				AlertDialog dialog = builder.create();
 				dialog.show();
 			}

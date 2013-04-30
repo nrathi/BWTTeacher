@@ -64,7 +64,6 @@ public final class R {
         public static final int hangman=0x7f05000c;
         public static final int i=0x7f050024;
         public static final int instructions=0x7f050012;
-        public static final int internet_required=0x7f050001;
         public static final int invalid_input=0x7f05003c;
         public static final int j=0x7f050025;
         public static final int k=0x7f050026;
@@ -78,6 +77,7 @@ public final class R {
         public static final int n=0x7f050029;
         public static final int next_items=0x7f050049;
         public static final int no=0x7f050038;
+        public static final int no_words=0x7f050001;
         public static final int numbers=0x7f050010;
         public static final int o=0x7f05002a;
         public static final int ok=0x7f050002;

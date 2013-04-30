@@ -147,7 +147,6 @@ public class MyApplication extends Application implements
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
-				hangmanWords = null;
 				e.printStackTrace();
 			}
 			return null;
